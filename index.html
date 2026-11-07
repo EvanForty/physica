@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Physica — AI Physics Discovery Laboratory</title>
+<meta name="description" content="Simulate reality. Discover the unknown. An AI-powered virtual physics laboratory with a universe simulator, particle collider, quantum lab and a law discovery engine.">
+<meta property="og:title" content="Physica — AI Physics Discovery Laboratory">
+<meta property="og:description" content="Simulate reality. Discover the unknown.">
+<meta property="og:image" content="/logo.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@PhysicaFun">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F4FC; --surface:#FFFFFF; --panel:#F0ECFA; --ink:#140A36; --muted:#5E5880; --faint:#938DB0; --line:#E3DEF2;
+  --accent:#6B1FE0; --accent-soft:#ECE3FF; --gold:#9A6516; --btn:#2A0E78; --btn-ink:#FFFFFF; --rose:#C93A6E;
+  --shadow:0 1px 0 rgba(30,10,90,.04),0 10px 30px -14px rgba(30,10,90,.22);
+  --serif:"Instrument Serif","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B0226; --surface:#130636; --panel:#180A42; --ink:#F3EEFF; --muted:#A99FCF; --faint:#776DA1; --line:#26165A;
+    --accent:#B57BFF; --accent-soft:#25104F; --gold:#FFC970; --btn:#7B2CF5; --btn-ink:#FFFFFF; --rose:#FF7AA8;
+    --shadow:0 10px 34px -16px rgba(0,0,0,.7); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B0226; --surface:#130636; --panel:#180A42; --ink:#F3EEFF; --muted:#A99FCF; --faint:#776DA1; --line:#26165A;
+  --accent:#B57BFF; --accent-soft:#25104F; --gold:#FFC970; --btn:#7B2CF5; --btn-ink:#FFFFFF; --rose:#FF7AA8;
+  --shadow:0 10px 34px -16px rgba(0,0,0,.7); color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+button,input,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 clamp(16px,4vw,64px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px)}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:76px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
+.brand img{width:38px;height:38px}
+.brand span{font-family:var(--serif);font-size:27px;letter-spacing:-.005em;line-height:1}
+nav.main{display:flex;gap:4px}
+nav.main a{padding:9px 14px;border-radius:6px;font-size:13.5px;color:var(--muted);text-decoration:none;white-space:nowrap}
+nav.main a:hover{color:var(--ink)}
+nav.main a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;box-shadow:0 1px 2px rgba(30,10,90,.06)}
+.btn-ghost:hover{border-color:var(--accent)}
+.btn-ghost svg{width:15px;height:15px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+.mono.v{color:var(--accent)}
+.icon-btn.menu-btn{display:none}
+.x-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;box-shadow:0 1px 2px rgba(30,10,90,.06)}
+.x-btn:hover{border-color:var(--accent);color:var(--accent)}
+.x-btn svg{width:14px;height:14px}
+.foot-links{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border:0;background:transparent;border-radius:6px;cursor:pointer;color:inherit}
+.icon-btn svg{width:17px;height:17px}
+
+.hero{display:grid;grid-template-columns:1.4fr 1fr;align-items:end;gap:40px;padding:56px 0 40px}
+.kicker{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.kicker::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent),0 0 12px var(--accent)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,6.4vw,80px);line-height:.98;letter-spacing:-.02em;margin:0}
+h1 em{display:block;font-style:italic;color:var(--accent)}
+.hero-side p{color:var(--muted);max-width:42ch;margin:0 0 22px}
+.textlink{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:14.5px;border-bottom:1px solid transparent}
+.textlink:hover{border-color:currentColor}
+.textlink svg,.btn svg{width:14px;height:14px}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3.6vw,44px);line-height:1.05;letter-spacing:-.01em;margin:6px 0 10px}
+h2 em{font-style:italic;color:var(--accent)}
+
+/* lab */
+.lab{display:grid;grid-template-columns:260px minmax(0,1fr) 260px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.side{padding:24px 22px}
+.side h3{font-family:var(--serif);font-weight:400;font-size:30px;margin:8px 0 16px;line-height:1.05}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cond{list-style:none;margin:0 0 20px;padding:0;display:flex;flex-direction:column;gap:2px}
+.cond button{width:100%;display:flex;align-items:center;gap:12px;padding:11px 10px;border:0;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:13.5px}
+.cond button .n{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.cond button .ic{margin-left:auto;color:var(--faint);width:14px;height:14px;flex-shrink:0}
+.cond button:hover{background:color-mix(in srgb,var(--accent-soft) 60%,transparent)}
+.cond button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.cond button[aria-pressed="true"] .ic{color:var(--accent)}
+.side .label{margin-top:18px;margin-bottom:6px}
+.side p.txt{margin:0;font-size:14px;color:var(--muted)}
+.side p.txt.strong{color:var(--ink)}
+.ctrl{border-top:1px solid var(--line);margin-top:22px;padding-top:6px}
+.slider{margin-top:16px}
+.slider .row span:first-child{font-size:14px}
+.slider .row span:last-child{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--line);border-radius:4px;margin:14px 0 4px;accent-color:var(--btn)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--btn);border:3px solid var(--surface);box-shadow:0 0 0 1px var(--btn);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--btn);border:3px solid var(--surface);box-shadow:0 0 0 1px var(--btn);cursor:pointer}
+.lawrow{display:flex;justify-content:space-between;gap:10px;margin-top:20px;font-size:13px;color:var(--muted)}
+.lawrow b{font-family:var(--mono);font-weight:400;color:var(--accent);text-align:right}
+.ctrl-note{font-size:12.5px;color:var(--faint);margin:10px 0 0}
+
+.stage{display:flex;flex-direction:column;border-left:1px solid var(--line);border-right:1px solid var(--line);background:#0E0233;color:#E9E1FF;min-width:0}
+.stage-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 12px 20px;border-bottom:1px solid #2A1766;gap:12px;flex-wrap:wrap}
+.stage .mono{color:#9B8CD6}
+.stage .icon-btn{color:#E9E1FF}
+.stage .icon-btn:hover{background:#24105C}
+.stage .icon-btn[aria-pressed="true"]{background:#2E1470;color:#D9B8FF}
+.canvas-box{position:relative;flex:1;min-height:540px;background:radial-gradient(ellipse at 50% 45%,#2B0C70 0%,#16044A 45%,#0B0228 100%)}
+.canvas-box::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(190,160,255,.16) 1px,transparent 1.2px);background-size:24px 24px;pointer-events:none}
+canvas#stage{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+canvas#stage.dragging{cursor:grabbing}
+.hint{position:absolute;left:16px;bottom:16px;right:180px;font-size:12px;color:#8576C2;pointer-events:none}
+.banner{position:absolute;left:50%;top:18px;transform:translateX(-50%);font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:#FFD99A;background:rgba(20,4,60,.7);border:1px solid #3B1F86;padding:6px 12px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.banner.on{opacity:1}
+.stage-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid #2A1766;font-size:12px;color:#B3A6E6;gap:12px;flex-wrap:wrap}
+.legend{display:flex;gap:16px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
+.metric .name{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);gap:8px}
+.metric .val{font-family:var(--serif);font-size:52px;line-height:1.05;letter-spacing:-.01em}
+.metric + .metric{margin-top:20px}
+.metric .sub{margin-top:4px}
+.spark{width:100%;height:46px;display:block;margin-top:6px}
+.inspector{border-top:1px solid var(--line);margin-top:22px;padding-top:18px}
+.inspector h4{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-weight:500;font-size:14.5px}
+.inspector h4 svg{width:15px;height:15px}
+.inspector dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}
+.inspector dt{color:var(--muted)}
+.inspector dd{margin:0;text-align:right;font-family:var(--mono);font-size:12px}
+.inspector .empty{color:var(--faint);font-size:13px;margin:0}
+
+.below{display:grid;grid-template-columns:minmax(0,1.9fr) 1fr;gap:56px;padding:56px 0 48px}
+.below .right{border-left:1px solid var(--line);padding-left:40px}
+.head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border:0;border-radius:6px;background:var(--btn);color:var(--btn-ink);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{filter:brightness(1.15)}
+.btn:disabled{opacity:.55;cursor:default;filter:none}
+.btn.line{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 1px 2px rgba(30,10,90,.06)}
+.btn.line:hover{border-color:var(--accent);filter:none}
+.lead{color:var(--muted);margin:0 0 22px;max-width:62ch}
+.method{display:flex;list-style:none;padding:0;margin:0 0 22px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.method li{flex:1;padding:10px 12px;font-size:12.5px;color:var(--faint);border-right:1px solid var(--line);display:flex;gap:8px;align-items:center;min-width:0}
+.method li:last-child{border-right:0}
+.method li b{font-family:var(--mono);font-weight:400;font-size:11px}
+.method li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.method li.now{background:var(--accent-soft);color:var(--accent)}
+.method li.done{color:var(--ink)}
+.method li.done b{color:var(--accent)}
+.runs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}
+.rcol{text-align:center}
+.rcol .t{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-bottom:8px;white-space:nowrap}
+.rcol .box{height:72px;background:var(--panel);border-radius:4px;position:relative;overflow:hidden}
+.rcol .box i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(to top,var(--btn),var(--accent));transition:height .45s cubic-bezier(.2,.7,.2,1)}
+.rcol .s{font-family:var(--mono);font-size:11.5px;margin-top:8px;color:var(--muted)}
+.axislabels{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-top:10px}
+.result{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin-top:28px;align-items:start}
+.plot{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px}
+.plot svg{width:100%;height:auto;display:block}
+.law{font-family:var(--serif);font-size:38px;line-height:1.1;margin:8px 0 6px}
+.law sup{font-size:.55em}
+.verdict{font-size:14px;color:var(--muted);margin:10px 0 0}
+.verdict b{color:var(--ink);font-weight:500}
+.status{font-family:var(--mono);font-size:13px;color:var(--accent);margin-top:20px}
+.disclaimer{display:flex;gap:28px;padding:22px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted);align-items:baseline}
+.disclaimer .mono{flex-shrink:0}
+
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:28px 28px 24px;display:flex;flex-direction:column}
+.card .row{align-items:flex-start}
+.card .glyph{width:30px;height:30px;color:var(--accent)}
+.card h3{font-family:var(--serif);font-weight:400;font-size:34px;margin:20px 0 6px;line-height:1.05}
+.card .desc{color:var(--muted);margin:0 0 20px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.card .appr{margin:6px 0 22px}
+.card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.card .foot .k{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.note{color:var(--muted);font-size:13.5px;margin:22px 0 48px}
+
+.nb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;padding-bottom:56px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 26px}
+.chip{padding:7px 12px;border:1px solid var(--line);background:var(--surface);border-radius:4px;font-family:var(--mono);font-size:12px;cursor:pointer;text-align:left}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.field{display:block;margin-bottom:20px}
+.field .lbl{display:block;margin-bottom:8px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+textarea{width:100%;min-height:96px;resize:vertical;padding:12px 14px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font-size:15px;line-height:1.5}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.formfoot{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.formfoot small{font-family:var(--mono);color:var(--faint);font-size:11.5px}
+.pill{display:inline-block;padding:3px 7px;border:1px solid var(--line);border-radius:3px;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--muted);vertical-align:middle;margin-left:8px}
+.nb-title{display:flex;align-items:center;font-family:var(--serif);font-size:30px;margin:0}
+.note-card{border-top:1px solid var(--line);padding-top:30px}
+.note-card h3{font-family:var(--serif);font-weight:400;font-size:36px;line-height:1.1;margin:10px 0 12px}
+.note-card .sum{color:var(--muted);margin:0 0 22px;max-width:60ch}
+.eq{font-family:var(--serif);font-style:italic;font-size:30px;padding:18px 20px;background:var(--panel);border-radius:8px;margin:0 0 20px;overflow-x:auto}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid var(--line);padding-top:20px;margin-top:4px}
+.split h5{margin:0 0 6px;font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.split h5.g{color:var(--gold)}
+.split p,.split ol,.split dl{margin:0;font-size:14px;color:var(--muted)}
+.split ol{padding-left:18px}
+.split li{margin-bottom:5px}
+.vars{display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.vars dt{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--ink)}
+.vars dd{margin:0}
+.unc{margin-top:20px;padding:16px 18px;background:var(--panel);border-radius:8px;font-size:14px;color:var(--muted)}
+.unc b{display:block;color:var(--ink);font-weight:500;margin-bottom:4px}
+.thinking{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--accent)}
+.thinking i{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(.5);opacity:.4}}
+.err{color:var(--rose);font-size:14px}
+
+.token-hero{display:grid;grid-template-columns:auto 1fr;gap:44px;align-items:center;padding:56px 0 40px}
+.token-hero img{width:200px;height:200px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.grid4 > div{padding:26px 24px;border-right:1px solid var(--line)}
+.grid4 > div:last-child{border-right:0}
+.num{font-family:var(--serif);font-size:48px;color:var(--accent);line-height:1}
+.grid4 h4,.model h4{margin:14px 0 6px;font-size:16px;font-weight:500}
+.grid4 p,.model p{margin:0;color:var(--muted);font-size:14px}
+.loopnote{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13.5px;margin:14px 0 0}
+.loopnote svg{width:16px;height:16px;color:var(--accent)}
+.model{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:22px;position:relative}
+.model > div{padding:0 22px 0 0;position:relative}
+.model .dot{width:28px;height:28px;border-radius:50%;border:1px solid var(--accent);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--bg);position:relative;z-index:1}
+.model::before{content:"";position:absolute;left:14px;right:14%;top:14px;height:1px;background:var(--line)}
+.features{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:24px}
+.features div{padding:22px 24px 22px 0;border-bottom:1px solid var(--line)}
+.features h4{margin:0 0 6px;font-size:15px;font-weight:500;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.features p{margin:0;color:var(--muted);font-size:13.5px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:2px 6px;border-radius:3px;background:var(--accent-soft);color:var(--accent);text-transform:uppercase}
+.tag.soon{background:var(--panel);color:var(--faint)}
+.sect{padding:48px 0}
+.sect > p{color:var(--muted);max-width:62ch;margin:0 0 24px}
+
+footer.bottom{border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:22px;padding-bottom:26px;gap:16px;flex-wrap:wrap}
+footer .fb{font-family:var(--serif);font-size:20px;color:var(--muted)}
+[data-view]{display:none}
+[data-view].show{display:block}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-size:13px;opacity:0;pointer-events:none;transition:.2s}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+@media (max-width:1100px){
+  .lab{grid-template-columns:1fr 1fr}
+  .stage{grid-column:1/-1;order:-1;border:0}
+  .lab .side:last-child{border-left:1px solid var(--line)}
+  .features{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .method li span{display:none}
+  .method li.now span{display:inline}
+}
+@media (max-width:860px){
+  .hero,.below,.nb,.token-hero,.result{grid-template-columns:1fr}
+  .below .right{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:32px}
+  .cards{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid4 > div:nth-child(2){border-right:0}
+  .grid4 > div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .model{grid-template-columns:1fr;gap:18px}
+  .model::before{display:none}
+  nav.main{position:absolute;top:76px;left:0;right:0;flex-direction:column;background:var(--bg);border-bottom:1px solid var(--line);padding:10px clamp(16px,4vw,64px);display:none}
+  nav.main.open{display:flex}
+  .icon-btn.menu-btn{display:grid}
+  .token-hero img{width:130px;height:130px}
+}
+@media (max-width:620px){
+  .topbar .x-btn .lbl{display:none}
+  .lab{grid-template-columns:1fr}
+  .lab .side:last-child{border-left:0;border-top:1px solid var(--line)}
+  .canvas-box{min-height:400px}
+  .runs{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .features,.split{grid-template-columns:1fr}
+  .features div{padding-right:0}
+  .disclaimer{flex-direction:column;gap:6px}
+    .head-row{flex-direction:column}
+  .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.tools{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.sep{width:1px;height:18px;background:#2A1766;margin:0 4px}
+.seg{display:inline-flex;border:1px solid #2E1A6E;border-radius:7px;overflow:hidden;background:#140540}
+.seg button{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:#B3A6E6;font-size:12.5px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.seg button svg{width:14px;height:14px}
+.seg button:hover{color:#fff}
+.seg button[aria-pressed="true"]{background:#3A1890;color:#fff}
+.seg.sm button{font-family:var(--mono);font-size:11px;padding:4px 8px}
+.foot-r{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tip{position:absolute;pointer-events:none;background:rgba(14,3,46,.92);border:1px solid #3B1F86;color:#EDE6FF;font-size:12px;padding:5px 9px;border-radius:6px;white-space:nowrap;transform:translate(12px,-50%);z-index:3}
+.tip b{font-weight:500;color:#FFD99A}
+.follow{position:absolute;left:16px;top:16px;display:inline-flex;align-items:center;gap:8px;background:rgba(58,24,144,.85);border:1px solid #5A34C8;color:#fff;font-size:12px;padding:6px 10px;border-radius:20px;cursor:pointer;z-index:3}
+.follow svg{width:12px;height:12px}
+.fire{position:absolute;right:16px;bottom:14px;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#8B3CFF,#5B1CD0);border:0;color:#fff;font-size:13px;font-weight:500;padding:9px 14px;border-radius:8px;cursor:pointer;box-shadow:0 6px 22px -6px rgba(166,75,255,.8);z-index:3}
+.fire:hover{filter:brightness(1.12)}
+.fire svg{width:14px;height:14px}
+.follow[hidden],.tip[hidden],.presets[hidden]{display:none}
+@media (min-width:1101px){ .lab{height:min(880px,calc(100vh - 100px));min-height:640px} .lab .side{overflow-y:auto;scrollbar-width:thin} .lab .canvas-box{min-height:0} }
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.presets .chip{font-size:11px;padding:5px 8px}
+.partinfo h5{margin:0 0 6px;font-family:var(--serif);font-weight:400;font-size:22px;color:var(--ink);line-height:1.1}
+.partinfo p{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
+.partinfo dl{margin-bottom:10px}
+.partinfo dd{white-space:normal}
+.partinfo .fact{font-size:12.5px;color:var(--accent);margin:8px 0 0}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;font-size:13.5px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
+.opt .sw{width:30px;height:18px;border-radius:10px;background:var(--line);position:relative;flex-shrink:0;transition:background .15s}
+.opt .sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.opt[aria-checked="true"] .sw{background:var(--btn)}
+.opt[aria-checked="true"] .sw::after{transform:translateX(12px)}
+.opt small{display:block;color:var(--faint);font-size:12px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap topbar">
+    <a class="brand" href="#lab" aria-label="Physica home"><img src="logo.png" alt=""><span>Physica</span></a>
+    <nav class="main" id="nav" aria-label="Main">
+      <a href="#lab" data-link="lab">Universe lab</a>
+      <a href="#experiments" data-link="experiments">Experiments</a>
+      <a href="#notebook" data-link="notebook">Theory notebook</a>
+      <a href="#token" data-link="token">$PHYSICA</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a class="x-btn" href="https://x.com/PhysicaFun" target="_blank" rel="noopener noreferrer" aria-label="Follow Physica on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span class="lbl">@PhysicaFun</span></a>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section data-view="lab">
+  <div class="wrap">
+    <div class="hero">
+      <div><div class="kicker mono">Physica / autonomous physics laboratory</div><h1>Simulate reality.<em>Discover the unknown.</em></h1></div>
+      <div class="hero-side">
+        <p>Build a small universe, retune its constants, and let an AI scientist search the results for the law that governs them. Then change the rules and see what law appears instead.</p>
+        <a class="textlink" href="#experiments">Browse the experiments <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </div>
+    </div>
+
+    <div class="lab">
+      <aside class="side">
+        <div class="row"><span class="mono">01 / Set up the experiment</span></div>
+        <h3>Choose an experiment</h3>
+        <ul class="cond" id="expList"></ul>
+        <div class="mono label">The setup</div>
+        <p class="txt" id="setupTxt"></p>
+        <div class="mono label">Hypothesis</div>
+        <p class="txt strong" id="hypTxt"></p>
+        <div class="ctrl">
+          <div class="presets" id="presets"></div>
+          <div id="sliders"></div>
+          <div class="mono label" style="margin-top:22px">Options</div>
+          <div id="opts"></div>
+          <div class="lawrow"><span>Expected law</span><b id="lawTxt"></b></div>
+          <p class="ctrl-note" id="ctrlNote"></p>
+        </div>
+      </aside>
+
+      <div class="stage">
+        <div class="stage-head">
+          <span class="mono" id="stageLabel">Live universe</span>
+          <div class="tools">
+            <div class="seg" role="group" aria-label="Pointer mode">
+              <button id="modeRotate" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M21 3v6h-6"/></svg>Rotate</button>
+              <button id="modeAct" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 3l14 8-6 2-2 6z"/></svg><span id="actLabel">Interact</span></button>
+            </div>
+            <span class="sep"></span>
+            <button class="icon-btn" id="zoomOut" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M8.5 11h5M20 20l-4.5-4.5"/></svg></button>
+            <button class="icon-btn" id="zoomIn" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M8.5 11h5M11 8.5v5M20 20l-4.5-4.5"/></svg></button>
+            <button class="icon-btn" id="viewReset" aria-label="Reset view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></button>
+            <button class="icon-btn" id="spinBtn" aria-label="Auto-rotate" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><ellipse cx="12" cy="12" rx="9" ry="4"/><path d="M17 15.5l2.5.5-.5 2.5"/></svg></button>
+            <span class="sep"></span>
+            <button class="icon-btn" id="pauseBtn" aria-label="Pause"></button>
+            <button class="icon-btn" id="restartBtn" aria-label="Restart the experiment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></button>
+          </div>
+        </div>
+        <div class="canvas-box" id="canvasBox">
+          <canvas id="stage" tabindex="0" aria-label="3D physics simulation. Drag or arrow keys to rotate, shift-drag to pan, scroll or plus and minus to zoom, space to pause, F to run the experiment action, M to switch pointer mode."></canvas>
+          <div class="banner" id="banner"></div>
+          <div class="tip" id="tip" hidden></div>
+          <button class="follow" id="followChip" hidden><span id="followTxt"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          <button class="fire" id="fireBtn"></button>
+          <div class="hint" id="hint"></div>
+        </div>
+        <div class="stage-foot">
+          <div class="legend" id="legend"></div>
+          <div class="foot-r">
+            <div class="seg sm" role="group" aria-label="Simulation speed" id="speedSeg">
+              <button data-sp="0.25">¼×</button><button data-sp="0.5">½×</button><button data-sp="1" aria-pressed="true">1×</button><button data-sp="2">2×</button><button data-sp="4">4×</button>
+            </div>
+            <span class="mono" id="countTxt"></span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <span class="mono">02 / Observe</span>
+        <h3>The measurements</h3>
+        <div class="metric"><div class="name"><span id="m1n"></span></div><div class="val" id="m1v" style="color:var(--accent)">—</div><div class="mono sub" id="m1s"></div></div>
+        <div class="metric"><div class="name"><span id="m2n"></span></div><div class="val" id="m2v" style="color:var(--gold)">—</div><div class="mono sub" id="m2s"></div></div>
+        <div class="metric"><div class="name"><span id="m3n"></span><span class="mono" id="m3v"></span></div><canvas class="spark" id="spark" aria-hidden="true"></canvas></div>
+        <div class="inspector">
+          <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/></svg><span id="inspTitle">Inspector</span></h4>
+          <div id="inspector"><p class="empty">Click an object to inspect it</p></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="below">
+      <div>
+        <div class="head-row">
+          <div><span class="mono">03 / Discover the law</span><h2>Let the agent discover.</h2></div>
+          <button class="btn" id="runBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 5l11 7-11 7z"/></svg>Run discovery</button>
+        </div>
+        <p class="lead" id="agentLead">Eight simulated runs. One fit: the power law that best explains them.</p>
+        <ol class="method" id="method">
+          <li data-s="0"><b>1</b><span>Hypothesis</span></li>
+          <li data-s="1"><b>2</b><span>Design</span></li>
+          <li data-s="2"><b>3</b><span>Simulate</span></li>
+          <li data-s="3"><b>4</b><span>Analyse</span></li>
+          <li data-s="4"><b>5</b><span>Refine</span></li>
+        </ol>
+        <div class="runs" id="runs"></div>
+        <div class="axislabels"><span id="xLab"></span><span id="yLab"></span></div>
+        <div class="status" id="agentStatus">Ready to run</div>
+        <div class="result" id="result" hidden>
+          <div class="plot" id="plot"></div>
+          <div><span class="mono v">Candidate law</span><div class="law" id="lawOut"></div><div class="mono" id="fitOut"></div><p class="verdict" id="verdict"></p></div>
+        </div>
+      </div>
+      <div class="right">
+        <span class="mono">Beyond the simulation</span>
+        <h2>What if you asked <em>a new question?</em></h2>
+        <p class="lead">Describe a physics question in plain words. The theory notebook proposes a hypothesis, an equation and an experiment to test it.</p>
+        <a class="btn line" href="#notebook">Open theory notebook <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      </div>
+    </div>
+    <div class="disclaimer"><span class="mono">Simulation, not discovery</span><span>A law found in Physica describes the simulation that produced it. New laws of physics need independent verification and experimental evidence beyond any simulation.</span></div>
+  </div>
+</section>
+
+<section data-view="experiments">
+  <div class="wrap">
+    <div class="hero">
+      <div><div class="kicker mono">The experiment library / 05</div><h1>Five experiments.<em>Five laws to find.</em></h1></div>
+      <div class="hero-side"><p>Each experiment hides a known law of physics. Run it as nature intended and the agent rediscovers it. Change the constants and it finds the law of a different universe.</p></div>
+    </div>
+    <div class="cards" id="cards"></div>
+    <p class="note">All quantities are in simulation units.</p>
+  </div>
+</section>
+
+<section data-view="notebook">
+  <div class="wrap">
+    <div class="hero">
+      <div><div class="kicker mono">The theory notebook</div><h1>Start with a question.<em>Derive a hypothesis.</em></h1></div>
+      <div class="hero-side"><p>Every answer here is a hypothesis to test, not a result. The notebook shows what would prove it wrong.</p></div>
+    </div>
+    <div class="nb">
+      <div>
+        <p class="nb-title">Your question <span class="pill">AI theory generator</span></p>
+        <p style="margin:10px 0 0">Ask about forces, particles, waves or the cosmos. The AI proposes a mathematical relationship and a computational experiment to test it.</p>
+        <div class="chips">
+          <button class="chip" data-preset="0">Gravity as 1/r³</button>
+          <button class="chip" data-preset="1">Fringe spacing</button>
+          <button class="chip" data-preset="2">Curving particle tracks</button>
+          <button class="chip" data-preset="3">Accelerating expansion</button>
+        </div>
+        <label class="field"><span class="lbl">Physics question</span><textarea id="fQ" placeholder="What relationship do you want to understand?"></textarea></label>
+        <label class="field"><span class="lbl">What you already know (optional)</span><textarea id="fK" placeholder="Constraints, observations or assumptions"></textarea></label>
+        <div class="formfoot"><small>Hypotheses, not results</small><button class="btn" id="theoryBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Generate hypothesis</button></div>
+      </div>
+      <div class="note-card" id="theoryOut">
+        <span class="mono v">Theory note / awaiting question</span>
+        <h3>Every law starts as a guess.</h3>
+        <p class="sum">A good hypothesis names its variables, predicts a number, and says which result would prove it wrong. The simulation is where the guess meets the data.</p>
+        <div class="split">
+          <div><h5>Hypothesis</h5><p>What relationship might hold?</p></div>
+          <div><h5 class="g">Falsification</h5><p>What result would rule it out?</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-view="token">
+  <div class="wrap">
+    <div class="token-hero">
+      <img src="logo.png" alt="Physica logo: a glowing nucleus with branching filaments and orbital rings, surrounded by particles">
+      <div>
+        <div class="kicker mono">$PHYSICA</div>
+        <h1>Run the experiments.<em>Reward the discoveries.</em></h1>
+        <p style="color:var(--muted);max-width:56ch;margin:18px 0 0">$PHYSICA is the proposed utility token for Physica: spent on advanced computation, research tools and AI agents, with a proposed share of platform fees cycling back to researchers who produce reproducible results.</p>
+      </div>
+    </div>
+    <div class="sect" style="padding-top:8px">
+      <span class="mono">The flywheel</span>
+      <h2>Experiments, in a loop.</h2>
+      <div class="grid4" style="margin-top:22px">
+        <div><div class="num">01</div><h4>Launch experiments</h4><p>Users create simulations and explore physical phenomena.</p></div>
+        <div><div class="num">02</div><h4>Spend $PHYSICA</h4><p>Unlock advanced computation, research tools and AI agents.</p></div>
+        <div><div class="num">03</div><h4>Generate research</h4><p>Simulations produce hypotheses, equations and experimental data.</p></div>
+        <div><div class="num">04</div><h4>Reward discoveries</h4><p>Proposed platform fees fund buybacks and research incentives.</p></div>
+      </div>
+      <p class="loopnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/></svg>Step 04 feeds back into step 01. Fee shares and buybacks are proposals, not commitments.</p>
+    </div>
+    <div class="sect">
+      <span class="mono">The discovery model</span>
+      <h2>How a candidate law is earned.</h2>
+      <p>The law discovery agent in the lab follows these five steps on every run.</p>
+      <div class="model">
+        <div><div class="dot">1</div><h4>Generate hypothesis</h4><p>AI proposes a mathematical relationship.</p></div>
+        <div><div class="dot">2</div><h4>Design experiment</h4><p>Select models, parameters and measurable outcomes.</p></div>
+        <div><div class="dot">3</div><h4>Run simulation</h4><p>Execute computational physics experiments.</p></div>
+        <div><div class="dot">4</div><h4>Analyse results</h4><p>Compare predictions against simulation data.</p></div>
+        <div><div class="dot">5</div><h4>Refine theory</h4><p>Test reproducibility and identify limitations.</p></div>
+      </div>
+    </div>
+    <div class="sect" style="padding-top:8px">
+      <span class="mono">What the lab does</span>
+      <h2>Eight instruments, one laboratory.</h2>
+      <div class="features">
+        <div><h4>Universe simulator</h4><p>Adjust constants, fields, particles and forces in a 3D environment.</p></div>
+        <div><h4>AI theory generator</h4><p>Turn a plain-language question into a hypothesis and an experiment plan.</p></div>
+        <div><h4>Particle collider</h4><p>Collide beams and track charged particles curving through a magnetic field.</p></div>
+        <div><h4>Quantum lab</h4><p>Send particles through two slits, one at a time, and watch interference build.</p></div>
+        <div><h4>Law discovery engine</h4><p>Fit candidate equations to simulation data and score how well they hold.</p></div>
+        <div><h4>Autonomous agents</h4><p>Agents design runs, simulate, analyse and refine without supervision.</p></div>
+        <div><h4>Blueprint marketplace</h4><p>Publish, share and license simulations, models and experiment setups.</p></div>
+        <div><h4>Discovery leaderboard</h4><p>Compete on accurate models, reproducible results and new hypotheses.</p></div>
+      </div>
+    </div>
+    <div class="disclaimer"><span class="mono">Not financial advice</span><span>$PHYSICA describes a proposed token model. Nothing here is an offer, an investment recommendation or a promise of returns. Simulation findings are not physical discoveries.</span></div>
+  </div>
+</section>
+</main>
+
+<footer class="bottom"><div class="wrap"><span class="fb">Physica</span><div class="foot-links"><span class="mono">Simulate reality. Discover the unknown.</span><a class="x-btn" href="https://x.com/PhysicaFun" target="_blank" rel="noopener noreferrer" aria-label="Physica on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Follow on X</a></div></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("on"),2200);}
+let seed=11; const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+const gauss=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v);};
+const TAU=Math.PI*2;
+const C={uv:"#A64BFF",mag:"#D46BFF",blue:"#6F8BFF",cyan:"#5FD4FF",gold:"#FFC970",white:"#FFFFFF",rose:"#FF6F9F",dim:"#5B3FA8"};
+
+/* routing */
+const VIEWS=["lab","experiments","notebook","token"];
+function route(){
+  let v=(location.hash||"#lab").slice(1); if(!VIEWS.includes(v)) v="lab";
+  $$("[data-view]").forEach(s=>s.classList.toggle("show",s.dataset.view===v));
+  $$("nav.main a").forEach(a=>{if(a.dataset.link===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+  $("#nav").classList.remove("open"); $("#menuBtn").setAttribute("aria-expanded","false");
+  window.scrollTo(0,0); if(v==="lab") requestAnimationFrame(resize);
+}
+addEventListener("hashchange",route);
+$("#menuBtn").addEventListener("click",()=>{const o=!$("#nav").classList.contains("open");$("#nav").classList.toggle("open",o);$("#menuBtn").setAttribute("aria-expanded",o);});
+
+/* ---------- 3D camera ---------- */
+const cv=$("#stage"), ctx=cv.getContext("2d");
+let W=800,H=540,DPR=1;
+const RW=200, CAM=820;
+const VIEW0={yaw:.6,pitch:-.42,zoom:1.1};
+let view={yaw:.6,pitch:-.42,zoom:1.1,px:0,py:0,tx:0,ty:0,tz:0,auto:!reduced,idleAt:0,follow:null};
+let rot={cy:1,sy:0,cp:1,sp:0}, vs=1;
+function prepView(){rot.cy=Math.cos(view.yaw);rot.sy=Math.sin(view.yaw);rot.cp=Math.cos(view.pitch);rot.sp=Math.sin(view.pitch);vs=Math.min(W,H)/(RW*2.4)*view.zoom;}
+function proj(x,y,z,o){
+  x-=view.tx; y-=view.ty; z-=view.tz;
+  const x1=x*rot.cy+z*rot.sy, z1=-x*rot.sy+z*rot.cy;
+  const y2=y*rot.cp-z1*rot.sp, z2=y*rot.sp+z1*rot.cp;
+  const f=CAM/Math.max(60,CAM-z2); o=o||{}; o.x=W/2+view.px+x1*f*vs; o.y=H/2+view.py-y2*f*vs; o.f=f; o.z=z2; o.k=f*vs; return o;
+}
+function unproj(sx,sy){
+  const x1=(sx-W/2-view.px)/vs, y2=-(sy-H/2-view.py)/vs, z2=0;
+  const y=y2*rot.cp+z2*rot.sp, z1=-y2*rot.sp+z2*rot.cp;
+  return [x1*rot.cy-z1*rot.sy+view.tx, y+view.ty, x1*rot.sy+z1*rot.cy+view.tz];
+}
+function camDir(){ const y=1*rot.sp, z1=1*rot.cp; return [-z1*rot.sy, y, z1*rot.cy]; } // world vector pointing toward viewer
+const depthA=z=>0.35+0.65*Math.min(1,Math.max(0,(z+RW)/(2*RW)));
+const sprites={};
+function hexA(col,a){ const n=parseInt(col.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+function sprite(col){
+  if(sprites[col]) return sprites[col];
+  const s=document.createElement("canvas"); s.width=s.height=64; const g=s.getContext("2d");
+  const gr=g.createRadialGradient(32,32,0,32,32,32);
+  gr.addColorStop(0,"rgba(255,255,255,1)"); gr.addColorStop(0.12,col); gr.addColorStop(0.35,hexA(col,.35)); gr.addColorStop(1,hexA(col,0));
+  g.fillStyle=gr; g.fillRect(0,0,64,64); return sprites[col]=s;
+}
+function glow(x,y,r,col,a){ if(r<0.3) return; ctx.globalAlpha=Math.max(0,Math.min(1,a??1)); ctx.drawImage(sprite(col),x-r,y-r,r*2,r*2); ctx.globalAlpha=1; }
+const _p={},_q={};
+function line3(a,b,col,alpha,w){ proj(a[0],a[1],a[2],_p); proj(b[0],b[1],b[2],_q); ctx.strokeStyle=hexA(col,alpha*depthA((_p.z+_q.z)/2)); ctx.lineWidth=w||1; ctx.beginPath(); ctx.moveTo(_p.x,_p.y); ctx.lineTo(_q.x,_q.y); ctx.stroke(); }
+function poly3(pts,col,alpha,w){ if(pts.length<2) return; ctx.strokeStyle=hexA(col,alpha); ctx.lineWidth=w||1; ctx.beginPath(); pts.forEach((p,i)=>{proj(p[0],p[1],p[2],_p); i?ctx.lineTo(_p.x,_p.y):ctx.moveTo(_p.x,_p.y);}); ctx.stroke(); }
+function ring3(fn,n,col,alpha,w){ const pts=[]; for(let i=0;i<=n;i++) pts.push(fn(i/n)); poly3(pts,col,alpha,w); }
+function arrow2(x0,y0,x1,y1,col,a,w){ const ang=Math.atan2(y1-y0,x1-x0), L=Math.hypot(x1-x0,y1-y0); if(L<2) return; const hs=Math.min(8,L*.4);
+  ctx.strokeStyle=hexA(col,a); ctx.fillStyle=hexA(col,a); ctx.lineWidth=w||1.4; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x1-hs*Math.cos(ang-.45),y1-hs*Math.sin(ang-.45)); ctx.lineTo(x1-hs*Math.cos(ang+.45),y1-hs*Math.sin(ang+.45)); ctx.closePath(); ctx.fill(); }
+function selRing(x,y,r){ ctx.strokeStyle="rgba(255,255,255,.85)"; ctx.lineWidth=1.3; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.stroke(); ctx.setLineDash([]); }
+const dl=rows=>"<dl>"+rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")+"</dl>";
+const norm=v=>{const l=Math.hypot(v[0],v[1],v[2])||1;return [v[0]/l,v[1]/l,v[2]/l];};
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+
+let scen=null, sel=null, hover=null, flash=0, paused=false, speed=1, mode="rotate";
+const P=k=>scen.params.find(p=>p.k===k).val;
+const O=k=>scen.options.find(o=>o.k===k).val;
+function showBanner(t){ const b=$("#banner"); b.textContent=t; b.classList.add("on"); clearTimeout(showBanner._t); showBanner._t=setTimeout(()=>b.classList.remove("on"),1800); }
+
+/* ================= 1. Orbital gravity ================= */
+const GM0=1.9e6;
+const gravity={
+  id:"gravity", name:"Orbital gravity", icon:"orbit",
+  setup:"Bodies orbit a star in a gravity field you control. Launch new bodies, add a second star, or let every body pull on every other.",
+  hyp:"Orbital period grows as a power of orbit radius.",
+  desc:"Bodies circle a star under a force you define. Slingshot new bodies into orbit, warp spacetime, and let the agent rediscover Kepler’s third law, or the law of your altered universe.",
+  lawShort:"Kepler’s third law",
+  law(){return "T ∝ r^"+((P("p")+1)/2).toFixed(2);},
+  note:"Changing a constant mid-flight bends existing orbits. Restart to relaunch on circular orbits.",
+  params:[{k:"G",label:"Gravity strength G",min:.5,max:2,step:.05,val:1,fmt:v=>v.toFixed(2)+"×"},{k:"p",label:"Force falls off as 1/rᵖ",min:1.5,max:3,step:.05,val:2,fmt:v=>"p = "+v.toFixed(2)}],
+  options:[{k:"grid",label:"Spacetime grid",help:"Warped by the potential",val:true},{k:"binary",label:"Binary star",help:"Two stars share the centre",val:false,reset:true},{k:"mutual",label:"Mutual gravity",help:"Bodies pull on each other",val:false},{k:"trails",label:"Orbit trails",val:true}],
+  actLabel:"Launch", actHint:"Drag from any point to slingshot a body. Tap for a circular orbit.", fireLabel:"Launch body",
+  legend:[["Star",C.gold],["Body",C.mag],["Launched",C.cyan],["Spacetime",C.uv]],
+  followable:true,
+  K(){return GM0*P("G")*Math.pow(100,P("p")-2);},
+  init(){
+    const K=this.K(), p=P("p"); this.stars=[]; this.bodies=[]; this.nid=0; this.drag=null;
+    if(O("binary")){ const s=45, v=Math.sqrt(s*K*0.5/Math.pow(2*s,p)); this.stars.push({x:s,y:0,z:0,vx:0,vy:0,vz:v,m:.5},{x:-s,y:0,z:0,vx:0,vy:0,vz:-v,m:.5}); }
+    else this.stars.push({x:0,y:0,z:0,vx:0,vy:0,vz:0,m:1});
+    for(let i=0;i<14;i++){
+      const r=(O("binary")?95:45)+(O("binary")?100:140)*(i/13)+rnd()*6, th=rnd()*TAU, inc=(rnd()-.5)*0.7, node=rnd()*TAU;
+      const v=Math.sqrt(K/Math.pow(r,p-1));
+      let pos=[r*Math.cos(th),0,r*Math.sin(th)], vel=[-Math.sin(th)*v,0,Math.cos(th)*v];
+      const rx=a=>[a[0],a[1]*Math.cos(inc)-a[2]*Math.sin(inc),a[1]*Math.sin(inc)+a[2]*Math.cos(inc)];
+      const ry=a=>[a[0]*Math.cos(node)+a[2]*Math.sin(node),a[1],-a[0]*Math.sin(node)+a[2]*Math.cos(node)];
+      pos=ry(rx(pos)); vel=ry(rx(vel)); this.addBody(pos,vel,[C.mag,C.uv,C.blue,C.white][i%4]);
+    }
+  },
+  addBody(pos,vel,col){ const b={id:++this.nid,x:pos[0],y:pos[1],z:pos[2],vx:vel[0],vy:vel[1],vz:vel[2],trail:[],state:"orbit",col,m:2+rnd()*2,born:performance.now()}; this.bodies.push(b);
+    const live=this.bodies.filter(b=>b.state==="orbit"); if(live.length>40){ live[0].state="removed"; } this.bodies=this.bodies.filter(b=>b.state!=="removed"); return b; },
+  step(dt){
+    const K=this.K(), p=P("p"), n=8, h=dt/n, mutual=O("mutual"), live=this.bodies.filter(b=>b.state==="orbit"), mb=0.006;
+    const acc=(x,y,z,self)=>{ let ax=0,ay=0,az=0;
+      for(const s of this.stars){ if(s===self) continue; const dx=x-s.x,dy=y-s.y,dz=z-s.z, r=Math.sqrt(dx*dx+dy*dy+dz*dz+16), a=-K*s.m/Math.pow(r,p+1); ax+=a*dx;ay+=a*dy;az+=a*dz; }
+      if(mutual) for(const o of live){ if(o===self) continue; const dx=x-o.x,dy=y-o.y,dz=z-o.z, r=Math.sqrt(dx*dx+dy*dy+dz*dz+64), a=-K*mb/Math.pow(r,p+1); ax+=a*dx;ay+=a*dy;az+=a*dz; }
+      return [ax,ay,az]; };
+    for(let s=0;s<n;s++){
+      if(this.stars.length>1) for(const st of this.stars){ const a=acc(st.x,st.y,st.z,st); st.vx+=a[0]*h; st.vy+=a[1]*h; st.vz+=a[2]*h; }
+      for(const b of live){ const a=acc(b.x,b.y,b.z,b); b.vx+=a[0]*h; b.vy+=a[1]*h; b.vz+=a[2]*h; }
+      if(this.stars.length>1) for(const st of this.stars){ st.x+=st.vx*h; st.y+=st.vy*h; st.z+=st.vz*h; }
+      for(const b of live){ b.x+=b.vx*h; b.y+=b.vy*h; b.z+=b.vz*h; }
+    }
+    for(const b of live){
+      const r=Math.hypot(b.x,b.y,b.z);
+      if(r>560){ b.state="escaped"; if(sel===b) sel=null; continue; }
+      if(this.stars.some(s=>Math.hypot(b.x-s.x,b.y-s.y,b.z-s.z)<9)){ b.state="absorbed"; flash=.6; if(sel===b) sel=null; continue; }
+      b.trail.push([b.x,b.y,b.z]); if(b.trail.length>140) b.trail.shift();
+    }
+  },
+  potential(x,z){ const K=this.K(), p=P("p"); let ph=0; for(const s of this.stars){ const r=Math.max(18,Math.hypot(x-s.x,z-s.z)); ph+=K*s.m/((p-1)*Math.pow(r,p-1)); } return Math.min(150,ph*0.0019); },
+  draw(now){
+    ctx.globalCompositeOperation="lighter";
+    if(O("grid")){
+      const N=14, E=270, base=-70;
+      for(let i=0;i<=N;i++){ const u=-E+2*E*i/N, a=[], b=[];
+        for(let j=0;j<=28;j++){ const v=-E+2*E*j/28; a.push([u,base-this.potential(u,v),v]); b.push([v,base-this.potential(v,u),u]); }
+        poly3(a,C.uv,.22,1); poly3(b,C.uv,.22,1); }
+    }
+    line3([0,-260,0],[0,260,0],C.uv,.14,2);
+    if(O("trails")) for(const b of this.bodies){ if(b.state!=="orbit") continue; ctx.lineWidth=1.4;
+      for(let i=1;i<b.trail.length;i++){ const a=b.trail[i-1], c=b.trail[i]; proj(a[0],a[1],a[2],_p); proj(c[0],c[1],c[2],_q);
+        ctx.strokeStyle=hexA(b.col,0.5*(i/b.trail.length)*depthA(_q.z)); ctx.beginPath(); ctx.moveTo(_p.x,_p.y); ctx.lineTo(_q.x,_q.y); ctx.stroke(); } }
+    const pulse=1+0.04*Math.sin(now/300);
+    for(const s of this.stars){ proj(s.x,s.y,s.z,_p); const k=Math.sqrt(s.m); glow(_p.x,_p.y,70*_p.k*pulse*k,C.uv,.55); glow(_p.x,_p.y,30*_p.k*k,C.gold,.95); glow(_p.x,_p.y,14*_p.k*k,C.white,1); }
+    const order=this.bodies.filter(b=>b.state==="orbit").map(b=>{proj(b.x,b.y,b.z,_p);b.sx=_p.x;b.sy=_p.y;b.sz=_p.z;b.sk=_p.k;return b;}).sort((a,b)=>a.sz-b.sz);
+    for(const b of order){ const fresh=Math.max(0,1-(now-b.born)/700); glow(b.sx,b.sy,(b.m*5+fresh*14)*b.sk,b.col,depthA(b.sz)); }
+    if(flash>0){ for(const s of this.stars){ proj(s.x,s.y,s.z,_p); glow(_p.x,_p.y,60*_p.k*flash,C.white,flash); } }
+    ctx.globalCompositeOperation="source-over";
+    for(const b of order){ if(b===sel) selRing(b.sx,b.sy,b.m*3*b.sk+8); else if(b===hover) selRing(b.sx,b.sy,b.m*3*b.sk+6); }
+    if(this.drag && this.drag.cur){ const d=this.drag; proj(...d.p0,_p); const x0=_p.x,y0=_p.y; proj(...d.cur,_q);
+      ctx.setLineDash([4,4]); arrow2(x0,y0,_q.x,_q.y,C.cyan,.9,1.6); ctx.setLineDash([]); glow(x0,y0,14,C.cyan,.9);
+      // predicted path
+      const K=this.K(), p=P("p"); let x=d.p0[0],y=d.p0[1],z=d.p0[2]; let [vx,vy,vz]=d.vel; const pts=[[x,y,z]], h=0.02;
+      for(let i=0;i<160;i++){ for(let s=0;s<3;s++){ let ax=0,ay=0,az=0; for(const st of this.stars){ const dx=x-st.x,dy=y-st.y,dz=z-st.z,r=Math.sqrt(dx*dx+dy*dy+dz*dz+16),a=-K*st.m/Math.pow(r,p+1); ax+=a*dx;ay+=a*dy;az+=a*dz; } vx+=ax*h;vy+=ay*h;vz+=az*h;x+=vx*h;y+=vy*h;z+=vz*h; } pts.push([x,y,z]); if(Math.hypot(x,y,z)>520) break; }
+      ctx.setLineDash([2,5]); poly3(pts,C.cyan,.6,1.2); ctx.setLineDash([]);
+    }
+  },
+  launchVel(p0,cur,screenD){
+    const K=this.K(), p=P("p");
+    if(screenD<8){ const r=Math.max(20,Math.hypot(...p0)); const dir=norm(cross(camDir(),p0)); const v=Math.sqrt(K/Math.pow(r,p-1)); return [dir[0]*v,dir[1]*v,dir[2]*v]; }
+    return [(cur[0]-p0[0])*2.2,(cur[1]-p0[1])*2.2,(cur[2]-p0[2])*2.2];
+  },
+  act:{
+    down(x,y){ const p0=unproj(x,y); gravity.drag={p0,cur:null,sx:x,sy:y,vel:gravity.launchVel(p0,p0,0)}; return true; },
+    move(x,y){ const d=gravity.drag; if(!d) return; d.cur=unproj(x,y); d.vel=gravity.launchVel(d.p0,d.cur,Math.hypot(x-d.sx,y-d.sy)); },
+    up(x,y){ const d=gravity.drag; if(!d) return; const cur=unproj(x,y); const v=gravity.launchVel(d.p0,cur,Math.hypot(x-d.sx,y-d.sy)); gravity.drag=null;
+      const b=gravity.addBody(d.p0,v,C.cyan); showBanner(`Body #${b.id} launched`); }
+  },
+  fire(){ const r=60+rnd()*120, th=rnd()*TAU, pos=[r*Math.cos(th),(rnd()-.5)*30,r*Math.sin(th)], K=this.K(), p=P("p"), v=Math.sqrt(K/Math.pow(r,p-1))*(0.85+rnd()*0.3);
+    const b=this.addBody(pos,[-Math.sin(th)*v,0,Math.cos(th)*v],C.cyan); showBanner(`Body #${b.id} launched`); },
+  pick(x,y){ let best=null,bd=22; for(const b of this.bodies){ if(b.state!=="orbit"||b.sx==null)continue; const d=Math.hypot(b.sx-x,b.sy-y); if(d<bd){bd=d;best=b;} } return best; },
+  label(b){ const r=Math.hypot(b.x,b.y,b.z); return `<b>Body #${b.id}</b> · ${r.toFixed(0)} u out`; },
+  pos(b){ return b.state==="orbit"?[b.x,b.y,b.z]:null; },
+  stats(){ const live=this.bodies.filter(b=>b.state==="orbit"); let T=0,v=0;
+    live.forEach(b=>{ const r=Math.hypot(b.x,b.y,b.z), sp=Math.hypot(b.vx,b.vy,b.vz), vr=(b.x*b.vx+b.y*b.vy+b.z*b.vz)/r, vt=Math.sqrt(Math.max(1e-6,sp*sp-vr*vr)); T+=TAU*r/vt; v+=sp; });
+    return {live:live.length,esc:this.bodies.filter(b=>b.state==="escaped").length,abs:this.bodies.filter(b=>b.state==="absorbed").length,T:live.length?T/live.length:0,v:live.length?v/live.length:0}; },
+  metrics(){ const s=this.stats(); return [
+    {n:"Bodies in orbit",v:String(s.live),s:`${s.esc} escaped · ${s.abs} fell in`},
+    {n:"Mean orbital period",v:s.live?s.T.toFixed(1)+"s":"—",s:"simulation seconds"},
+    {n:"Mean orbital speed",v:s.v.toFixed(0)+" u/s",spark:s.v}]; },
+  count(){return `${this.bodies.filter(b=>b.state==="orbit").length} bodies · ${this.stars.length} ${this.stars.length>1?"stars":"star"}`;},
+  inspectTitle:"Body inspector", emptyHint:"Click a body to inspect it, double-click to follow it",
+  inspect(b){ if(!b||b.state!=="orbit") return null; const r=Math.hypot(b.x,b.y,b.z), sp=Math.hypot(b.vx,b.vy,b.vz), vr=(b.x*b.vx+b.y*b.vy+b.z*b.vz)/r, vt=Math.sqrt(Math.max(1e-6,sp*sp-vr*vr));
+    const K=this.K(), p=P("p"), E=sp*sp/2-(Math.abs(p-1)<1e-6?0:K/((p-1)*Math.pow(r,p-1)));
+    return dl([["Body","#"+String(b.id).padStart(2,"0")],["Distance",r.toFixed(0)+" u"],["Speed",sp.toFixed(0)+" u/s"],["Period est.",(TAU*r/vt).toFixed(1)+" s"],["Radial drift",(vr>0?"+":"")+vr.toFixed(1)+" u/s"],["Orbit",E<0?"bound":"escaping"]]); },
+  agent:{x:"Orbit radius r",y:"Period T",xs:[40,55,72,90,110,130,155,180],xf:v=>v.toFixed(0),yf:v=>v.toFixed(2)+"s",hyp:"T = k · rⁿ",
+    design:"Eight circular orbits from r = 40 to 180 around a single star, each timed over one full revolution.",
+    measure(r){ const K=gravity.K(), p=P("p"); let x=r,y=0,vx=0,vy=Math.sqrt(K/Math.pow(r,p-1)); const Te=TAU*r/vy, h=Te/6000; let ang=0,prev=0,t=0;
+      for(let i=0;i<20000;i++){ const rr=Math.hypot(x,y), a=-K/Math.pow(rr,p+1); vx+=a*x*h; vy+=a*y*h; x+=vx*h; y+=vy*h; t+=h;
+        const th=Math.atan2(y,x); let d=th-prev; if(d<-Math.PI)d+=TAU; if(d>Math.PI)d-=TAU; prev=th; ang+=d; if(ang>=TAU) return t-(ang-TAU)/(d/h); } return t; },
+    expect(){ const p=P("p"), n=(p+1)/2; return {n,text:Math.abs(p-2)<.001?"Matches <b>Kepler’s third law</b>: T² ∝ r³, the law of our own solar system.":`Matches the expected exponent (p+1)/2 = ${n.toFixed(2)} for a 1/r<sup>${p.toFixed(2)}</sup> force. <b>This is not the law of our universe</b>, it is the law of yours.`}; } }
+};
+
+/* ================= 2. Particle collider ================= */
+const SPD=230, KB=60, BAR=165, MUR=250;
+const SPECIES={e:{name:"e",label:"Electron",col:[C.mag,C.gold]},mu:{name:"μ",label:"Muon",col:[C.cyan,C.cyan]},pi:{name:"π",label:"Pion",col:[C.uv,C.gold]}};
+const collider={
+  id:"collider", name:"Particle collider", icon:"collide",
+  setup:"Two beams meet inside a layered detector. Each collision sprays electrons, muons and pions that curl in the magnetic field.",
+  hyp:"Track radius grows as a power of particle momentum.",
+  desc:"Fire the beams, watch tracks curl through the tracker, deposit energy in the calorimeter and punch out to the muon chambers. The agent finds how bending depends on momentum.",
+  lawShort:"Magnetic rigidity", law(){return "r = p / qB";},
+  note:"Stronger fields curl tracks tighter. Higher energy makes more, stiffer tracks.",
+  params:[{k:"E",label:"Beam energy",min:1,max:10,step:.5,val:5,fmt:v=>v.toFixed(1)+" TeV"},{k:"B",label:"Magnetic field B",min:.5,max:3,step:.1,val:1.4,fmt:v=>v.toFixed(1)+" T"}],
+  options:[{k:"auto",label:"Automatic collisions",help:"A crossing every 1.7 s",val:true},{k:"calo",label:"Calorimeter",help:"Energy towers where tracks stop",val:true},{k:"muons",label:"Muon chambers",help:"Muons punch through",val:true},{k:"jets",label:"Jet events",help:"Tracks collimate into jets",val:false}],
+  actLabel:"Fire", actHint:"Tap anywhere to fire the beams. Click a track in rotate mode to inspect it.", fireLabel:"Fire beams",
+  legend:[["e / π⁺",C.mag],["e / π⁻",C.gold],["Muon",C.cyan],["Beam",C.blue]],
+  followable:false,
+  init(){ this.tracks=[]; this.towers=[]; this.events=0; this.timer=0.6; this.last=null; this.pending=0; this.nid=0; },
+  collide(){
+    const E=P("E"), N=Math.round(6+E*2.6+rnd()*6), ev={id:++this.events,n:N,pos:0,neg:0,mu:0,pmax:0,E}, jets=O("jets");
+    const axes=[]; if(jets){ const nj=rnd()<.6?2:3; const a0=norm([gauss(),gauss(),gauss()*0.6]); axes.push(a0); axes.push([-a0[0],-a0[1],-a0[2]]); if(nj===3) axes.push(norm([gauss(),gauss(),gauss()*.6])); }
+    for(let i=0;i<N;i++){
+      let dir; if(jets){ const ax=axes[i%axes.length]; dir=norm([ax[0]+gauss()*.22,ax[1]+gauss()*.22,ax[2]+gauss()*.22]); }
+      else { const u=rnd()*1.6-.8, th=rnd()*TAU, s=Math.sqrt(1-u*u); dir=[s*Math.cos(th),s*Math.sin(th),u]; }
+      const q=rnd()<.5?1:-1, rs=rnd(), sp=rs<.12?"mu":rs<.3?"e":"pi";
+      const p=Math.min(320,Math.max(6,(6+22*-Math.log(1-rnd()*0.999))*E/4*(jets?1.4:1)));
+      const col=sp==="mu"?C.cyan:(q>0?C.mag:C.gold);
+      this.tracks.push({id:++this.nid,ev:ev.id,sp,x:0,y:0,z:0,vx:dir[0]*SPD,vy:dir[1]*SPD,vz:dir[2]*SPD,q,p,pts:[[0,0,0]],age:0,done:false,col});
+      q>0?ev.pos++:ev.neg++; if(sp==="mu") ev.mu++; ev.pmax=Math.max(ev.pmax,p);
+    }
+    const tr=this.tracks.slice(-N); ev.r=tr.reduce((a,t)=>a+Math.hypot(t.vx,t.vy)*t.p/(KB*P("B")),0)/N;
+    this.last=ev; flash=1;
+  },
+  fire(){ if(this.pending<=0) this.pending=0.45; },
+  step(dt){
+    if(this.pending>0){ this.pending-=dt; if(this.pending<=0){ this.pending=0; this.collide(); this.timer=1.7; } }
+    else if(O("auto")){ this.timer-=dt; if(this.timer<=0){ this.pending=0.45; this.timer=99; } }
+    const B=P("B"), mu=O("muons");
+    for(const t of this.tracks){ t.age+=dt; if(t.done) continue;
+      const n=3,h=dt/n; for(let s=0;s<n;s++){ const w=t.q*B*KB/t.p*h, c=Math.cos(w), sn=Math.sin(w); const vx=t.vx*c-t.vy*sn, vy=t.vx*sn+t.vy*c; t.vx=vx;t.vy=vy; t.x+=t.vx*h;t.y+=t.vy*h;t.z+=t.vz*h; }
+      t.pts.push([t.x,t.y,t.z]);
+      const R=Math.hypot(t.x,t.y), lim=(t.sp==="mu"&&mu)?MUR:BAR;
+      if(R>lim||Math.abs(t.z)>(t.sp==="mu"&&mu?260:175)||t.age>2.2){ t.done=true;
+        if(t.sp!=="mu"||!mu){ if(R>BAR-5) this.towers.push({x:t.x,y:t.y,z:t.z,e:t.p,age:0,col:t.col}); } }
+    }
+    this.towers.forEach(w=>w.age+=dt); this.towers=this.towers.filter(w=>w.age<2.8);
+    this.tracks=this.tracks.filter(t=>t.age<3.2||t===sel);
+  },
+  draw(now){
+    ctx.globalCompositeOperation="lighter";
+    const ringZ=[-175,-88,0,88,175];
+    for(const z of ringZ) ring3(t=>[Math.cos(t*TAU)*BAR,Math.sin(t*TAU)*BAR,z],64,C.dim,.5,1);
+    for(const r of [40,90]) for(const z of [-175,175]) ring3(t=>[Math.cos(t*TAU)*r,Math.sin(t*TAU)*r,z],40,C.dim,.35,1);
+    for(let i=0;i<12;i++){ const a=i/12*TAU; line3([Math.cos(a)*BAR,Math.sin(a)*BAR,-175],[Math.cos(a)*BAR,Math.sin(a)*BAR,175],C.dim,.28,1); }
+    if(O("muons")){ for(const z of [-260,-130,0,130,260]) ring3(t=>[Math.cos(t*TAU)*MUR,Math.sin(t*TAU)*MUR,z],72,C.cyan,.16,1);
+      for(let i=0;i<8;i++){ const a=i/8*TAU+.2; line3([Math.cos(a)*MUR,Math.sin(a)*MUR,-260],[Math.cos(a)*MUR,Math.sin(a)*MUR,260],C.cyan,.12,1); } }
+    line3([0,0,-320],[0,0,320],C.blue,.35,1.5);
+    if(this.pending>0){ const d=this.pending/0.45*320; proj(0,0,-d,_p); glow(_p.x,_p.y,16*_p.k,C.blue,.95); proj(0,0,d,_p); glow(_p.x,_p.y,16*_p.k,C.blue,.95); }
+    if(O("calo")) for(const w of this.towers){ const f=Math.max(0,1-w.age/2.8), R=Math.hypot(w.x,w.y)||1, L=Math.min(70,w.e*0.5)*f, ux=w.x/R, uy=w.y/R;
+      proj(w.x,w.y,w.z,_p); const x0=_p.x,y0=_p.y; proj(w.x+ux*L,w.y+uy*L,w.z,_q);
+      ctx.strokeStyle=hexA(C.gold,.75*f); ctx.lineWidth=Math.max(2,5*_p.k); ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(_q.x,_q.y); ctx.stroke(); glow(_q.x,_q.y,10*_q.k,C.gold,f); }
+    for(const t of this.tracks){ const fade=t===sel?1:(t.age<2.2?1:Math.max(0,1-(t.age-2.2))); const hi=t===sel||t===hover;
+      ctx.lineWidth=hi?2.8:1.6; ctx.beginPath(); for(let i=0;i<t.pts.length;i++){ proj(t.pts[i][0],t.pts[i][1],t.pts[i][2],_p); i?ctx.lineTo(_p.x,_p.y):ctx.moveTo(_p.x,_p.y);} ctx.strokeStyle=hexA(hi?C.white:t.col,.85*fade); ctx.stroke();
+      proj(t.x,t.y,t.z,_p); t.sx=_p.x; t.sy=_p.y; glow(_p.x,_p.y,(t.done?6:9)*_p.k,t.col,fade); }
+    if(flash>0){ proj(0,0,0,_p); glow(_p.x,_p.y,90*_p.k*flash,C.gold,flash); glow(_p.x,_p.y,40*_p.k*flash,C.white,flash); }
+    ctx.globalCompositeOperation="source-over";
+  },
+  act:{ down(){return true;}, move(){}, up(){ collider.fire(); } },
+  pick(x,y){ let best=null,bd=16; for(const t of this.tracks){ if(t.sx==null) continue; for(let i=0;i<t.pts.length;i+=3){ proj(...t.pts[i],_p); const d=Math.hypot(_p.x-x,_p.y-y); if(d<bd){bd=d;best=t;} } } return best; },
+  tname(t){ const s=SPECIES[t.sp]; return s.name+(t.sp==="e"?(t.q>0?"⁺":"⁻"):(t.q>0?"⁺":"⁻")); },
+  label(t){ return `<b>${this.tname(t)}</b> ${SPECIES[t.sp].label.toLowerCase()} · p = ${t.p.toFixed(0)}`; },
+  pos(){return null;},
+  metrics(){ const e=this.last, live=this.tracks.filter(t=>!t.done).length;
+    return [{n:"Tracks this collision",v:e?String(e.n):"—",s:e?`collision #${e.id} · ${e.mu} muons`:"beams approaching"},
+      {n:"Mean track radius",v:e?e.r.toFixed(0)+" u":"—",s:`in a ${P("B").toFixed(1)} T field`},
+      {n:"Live tracks",v:String(live),spark:live}]; },
+  count(){return `${this.events} collisions`;},
+  inspectTitle:"Track inspector", emptyHint:"Click a track to inspect it",
+  inspect(t){ if(t&&this.tracks.includes(t)){ const pt=Math.hypot(t.vx,t.vy)/SPD*t.p; return dl([["Particle",this.tname(t)+" "+SPECIES[t.sp].label.toLowerCase()],["Collision","#"+t.ev],["Momentum p",t.p.toFixed(1)],["Transverse p",pt.toFixed(1)],["Bend radius",(Math.hypot(t.vx,t.vy)*t.p/(KB*P("B"))).toFixed(0)+" u"],["Charge",t.q>0?"+1":"−1"]]); }
+    const e=this.last; if(!e) return null; return dl([["Last collision","#"+e.id],["Beam energy",e.E.toFixed(1)+" TeV"],["Tracks",e.n],["Charge + / −",e.pos+" / "+e.neg],["Muons",e.mu],["Top momentum",e.pmax.toFixed(0)]]); },
+  agent:{x:"Momentum p",y:"Track radius r",xs:[10,15,22,33,50,75,110,165],xf:v=>v.toFixed(0),yf:v=>v.toFixed(0)+"u",hyp:"r = k · pⁿ",
+    design:"Eight single particles fired across the field, momentum 10 to 165, radius fitted from two full turns.",
+    measure(p){ const B=P("B"); let x=0,y=0,vx=SPD,vy=0,mx=0,mn=0; const w=B*KB/p, n=2400, h=2*TAU/w/n, c=Math.cos(w*h), s=Math.sin(w*h);
+      for(let i=0;i<n;i++){ const a=vx*c-vy*s, b=vx*s+vy*c; vx=a; vy=b; x+=vx*h; y+=vy*h; mx=Math.max(mx,y); mn=Math.min(mn,y); } return (mx-mn)/2; },
+    expect(){ return {n:1,text:"Matches <b>r = p / qB</b>: radius grows in direct proportion to momentum, which is how real detectors measure it."}; } }
+};
+
+/* ================= 3. Quantum double slit ================= */
+const LQ=210, XB=-60, XS=150;
+const quantum={
+  id:"quantum", name:"Quantum double slit", icon:"wave", view0:{yaw:-0.55,pitch:-0.28,zoom:1.05},
+  setup:"Particles leave a source one at a time and pass two slits. Watch where each one lands, then put a detector on the slits.",
+  hyp:"Fringe spacing grows as a power of wavelength.",
+  desc:"Fire single particles at two slits and watch interference assemble dot by dot. Switch on the which-path detector and the pattern collapses.",
+  lawShort:"Two-slit interference", law(){return O("which")||O("single")?"no fringes expected":"Δy = λL / d";},
+  note:"Changing a setting clears the screen so a fresh pattern can build.",
+  params:[{k:"lam",label:"Wavelength λ",min:2,max:8,step:.1,val:5,fmt:v=>v.toFixed(1)+" u"},{k:"d",label:"Slit separation d",min:20,max:70,step:1,val:40,fmt:v=>v.toFixed(0)+" u"}],
+  options:[{k:"which",label:"Which-path detector",help:"Measure which slit each particle took",val:false,reset:true},{k:"single",label:"Close one slit",val:false,reset:true},{k:"waves",label:"Wavefronts",help:"Show the probability wave",val:true},{k:"curve",label:"Predicted intensity",val:true}],
+  resetOnChange:true,
+  actLabel:"Fire", actHint:"Tap anywhere to fire a burst of particles.", fireLabel:"Fire burst",
+  legend:[["In flight",C.blue],["Detection",C.gold],["Wavefront",C.cyan],["Apparatus",C.uv]],
+  followable:false,
+  env(y,lam){ const a=8, b=Math.PI*a*y/(lam*LQ); return b===0?1:Math.pow(Math.sin(b)/b,2); },
+  I(y,lam,d,which,single){ if(single) return this.env(y-d/2,lam); if(which) return 0.5*(this.env(y-d/2,lam)+this.env(y+d/2,lam));
+    return Math.pow(Math.cos(Math.PI*d*y/(lam*LQ)),2)*this.env(y,lam); },
+  Inow(y){ return this.I(y,P("lam"),P("d"),O("which"),O("single")); },
+  init(){ this.hits=[]; this.fly=[]; this.emit=0; this.total=0; this.rate=[]; this.burst=0; this.wt=0; },
+  spawn(){ const d=P("d"); let y=0; for(let k=0;k<80;k++){ y=(rnd()*2-1)*140; if(rnd()<this.Inow(y)) break; }
+    const z=(rnd()*2-1)*55, slit=O("single")?d/2:(rnd()<.5?-1:1)*d/2; this.fly.push({t:0,y,z,slit,zs:z*0.6,tag:O("which")}); },
+  fire(){ this.burst+=60; },
+  step(dt){
+    this.wt+=dt;
+    this.emit+=dt*(reduced?14:30);
+    while(this.emit>1){ this.emit--; this.spawn(); }
+    const nb=Math.min(this.burst,Math.ceil(dt*400)); for(let i=0;i<nb;i++) this.spawn(); this.burst-=nb;
+    for(const f of this.fly) f.t+=dt*1.6;
+    const landed=this.fly.filter(f=>f.t>=1); this.fly=this.fly.filter(f=>f.t<1);
+    const now=performance.now(); landed.forEach(f=>{ this.hits.push({y:f.y,z:f.z,b:now}); this.total++; this.rate.push(now); });
+    if(this.hits.length>3200) this.hits.splice(0,this.hits.length-3200);
+  },
+  spacing(){
+    if(this.hits.length<350||O("which")||O("single")) return null; const bins=new Array(140).fill(0);
+    this.hits.forEach(h=>{const i=Math.floor((h.y+140)/2); if(i>=0&&i<140) bins[i]++;});
+    const sm=bins.map((_,i)=>{let s=0,c=0;for(let j=-2;j<=2;j++){if(bins[i+j]!=null){s+=bins[i+j];c++;}}return s/c;});
+    const mx=Math.max(...sm), pk=[]; for(let i=1;i<139;i++) if(sm[i]>sm[i-1]&&sm[i]>=sm[i+1]&&sm[i]>mx*.35) pk.push(i*2-139);
+    if(pk.length<3) return null; const df=[]; for(let i=1;i<pk.length;i++) df.push(pk[i]-pk[i-1]); df.sort((a,b)=>a-b); return df[Math.floor(df.length/2)];
+  },
+  draw(now){
+    const d=P("d"), lam=P("lam"), single=O("single");
+    ctx.globalCompositeOperation="lighter";
+    proj(-190,0,0,_p); glow(_p.x,_p.y,26*_p.k,C.blue,.9); glow(_p.x,_p.y,10*_p.k,C.white,1);
+    const bz=70, by=130, sw=4;
+    const rect=(x,y0,y1,z0,z1,col,a)=>{ line3([x,y0,z0],[x,y1,z0],col,a);line3([x,y1,z0],[x,y1,z1],col,a);line3([x,y1,z1],[x,y0,z1],col,a);line3([x,y0,z1],[x,y0,z0],col,a); };
+    if(single){ rect(XB,-by,d/2-sw,-bz,bz,C.uv,.6); rect(XB,d/2+sw,by,-bz,bz,C.uv,.55); }
+    else { rect(XB,-by,-d/2-sw,-bz,bz,C.uv,.55); rect(XB,-d/2+sw,d/2-sw,-bz,bz,C.uv,.55); rect(XB,d/2+sw,by,-bz,bz,C.uv,.55); }
+    if(O("which")) for(const s of single?[d/2]:[-d/2,d/2]){ proj(XB+6,s,bz+8,_p); glow(_p.x,_p.y,12*_p.k,C.rose,.9+.1*Math.sin(now/120)); ring3(t=>[XB+6,s+Math.cos(t*TAU)*9,Math.sin(t*TAU)*9+bz+8],20,C.rose,.7,1.2); }
+    rect(XS,-145,145,-85,85,C.uv,.5);
+    if(O("waves")){
+      const sp=lam*7, ph=(this.wt*45)%sp;
+      for(let x=-190+ph;x<XB;x+=sp) line3([x,-70,0],[x,70,0],C.cyan,.25,1);
+      if(!O("which")) for(const s of single?[d/2]:[-d/2,d/2]) for(let r=ph;r<LQ+40;r+=sp){ const a=Math.max(0,.32-r/900);
+        ring3(t=>{const ang=-Math.PI/2+t*Math.PI; return [XB+Math.cos(ang)*r,s+Math.sin(ang)*r,0];},36,C.cyan,a,1); }
+    }
+    if(O("curve")){ const pts=[]; for(let y=-140;y<=140;y+=1.5) pts.push([XS-this.Inow(y)*55,y,-85]); poly3(pts,C.gold,.75,1.6); }
+    for(const f of this.fly){ let x,y,z;
+      if(f.t<0.45){ const u=f.t/0.45; x=-190+(XB+190)*u; y=f.slit*u; z=f.zs*u; }
+      else { const u=(f.t-0.45)/0.55; x=XB+(XS-XB)*u; y=f.slit+(f.y-f.slit)*u; z=f.zs+(f.z-f.zs)*u; }
+      proj(x,y,z,_p); glow(_p.x,_p.y,7*_p.k,f.tag&&f.t>0.45?C.rose:C.blue,.85); }
+    for(const h of this.hits){ proj(XS,h.y,h.z,_p); const fresh=Math.max(0,1-(now-h.b)/600); glow(_p.x,_p.y,(3.2+6*fresh)*_p.k,fresh>0?C.white:C.gold,.75); }
+    ctx.globalCompositeOperation="source-over";
+  },
+  act:{ down(){return true;}, move(){}, up(){ quantum.fire(); } },
+  pick(){return null;}, label(){return "";}, pos(){return null;},
+  metrics(){ const now=performance.now(); this.rate=this.rate.filter(t=>now-t<1000); const s=this.spacing(), pred=P("lam")*LQ/P("d"), coll=O("which")||O("single");
+    return [{n:"Particles detected",v:String(this.total),s:"one at a time"},
+      {n:"Fringe spacing",v:coll?"none":(s?s.toFixed(0)+" u":"—"),s:coll?(O("which")?"path measured, interference gone":"one slit, no interference"):(s?`predicted ${pred.toFixed(1)} u`:"building the pattern")},
+      {n:"Detections per second",v:String(this.rate.length),spark:this.rate.length}]; },
+  count(){return `${this.hits.length} detections on screen`;},
+  inspectTitle:"Apparatus", emptyHint:"",
+  inspect(){ return dl([["Wavelength λ",P("lam").toFixed(1)+" u"],["Slit gap d",P("d").toFixed(0)+" u"],["Screen distance L",LQ+" u"],["Open slits",O("single")?"1":"2"],["Which-path",O("which")?"on":"off"],["In flight",this.fly.length]]); },
+  agent:{x:"Wavelength λ",y:"Fringe spacing Δy",xs:[2,2.8,3.6,4.4,5.2,6,6.8,7.6],xf:v=>v.toFixed(1),yf:v=>v.toFixed(1)+"u",hyp:"Δy = k · λⁿ",
+    design:"Eight wavelengths from 2.0 to 7.6 at fixed slit gap, fringe peaks located on a fine detector grid.",
+    measure(lam){ if(O("which")||O("single")) return NaN; const d=P("d"), pk=[]; const I=y=>quantum.I(y,lam,d,false,false); let a=I(-140), b=I(-139.95);
+      for(let y=-139.9;y<140;y+=0.05){ const c=I(y); if(b>a&&b>=c&&b>0.3) pk.push(y-0.05); a=b;b=c; }
+      const df=[]; for(let i=1;i<pk.length;i++) df.push(pk[i]-pk[i-1]); df.sort((x,y)=>x-y); return df[Math.floor(df.length/2)]; },
+    fail:"No fringes to measure. Knowing which slit each particle took, or closing a slit, removes the interference, so there is no spacing law to find. Switch the detector off and run again.",
+    expect(){ return {n:1,text:"Matches <b>Δy = λL / d</b>: spacing grows in step with wavelength. Single particles still build a wave pattern."}; } }
+};
+
+/* ================= 4. Expanding universe ================= */
+const cosmos={
+  id:"cosmos", name:"Expanding universe", icon:"cosmos",
+  setup:"Hundreds of galaxies ride an expanding space. Set the expansion rate and matter density, pick any galaxy as your home, and see what it sees.",
+  hyp:"Recession speed grows as a power of distance.",
+  desc:"Watch space stretch, push matter density past critical to trigger a big crunch, and observe from any galaxy. The agent rediscovers Hubble’s law.",
+  lawShort:"Hubble’s law", law(){return "v = H · d";},
+  note:"Above Ωm = 1 the universe eventually stops and recollapses.",
+  params:[{k:"H",label:"Expansion rate H₀",min:.1,max:.6,step:.01,val:.3,fmt:v=>v.toFixed(2)+" /s"},{k:"Om",label:"Matter density Ωm",min:0,max:2,step:.05,val:.3,fmt:v=>v.toFixed(2)}],
+  options:[{k:"arrows",label:"Hubble flow arrows",help:"Velocity seen from your galaxy",val:true},{k:"grid",label:"Comoving grid",help:"Space itself stretching",val:true},{k:"clusters",label:"Galaxy clusters",val:true,reset:true}],
+  actLabel:"Observe", actHint:"Tap a galaxy to observe the universe from it.", fireLabel:"Random observer",
+  legend:[["Galaxy",C.blue],["Your galaxy",C.gold],["Recession",C.mag]],
+  followable:true,
+  init(){ this.g=[]; const cl=O("clusters"), centers=[]; for(let i=0;i<7;i++){ const d=norm([gauss(),gauss(),gauss()]), r=Math.cbrt(rnd())*.8; centers.push([d[0]*r,d[1]*r,d[2]*r]); }
+    for(let i=0;i<320;i++){ let x,y,z;
+      if(i===0){x=y=z=0;}
+      else if(cl&&rnd()<.5){ const c=centers[i%7]; x=c[0]+gauss()*.09; y=c[1]+gauss()*.09; z=c[2]+gauss()*.09; }
+      else { const d=norm([gauss(),gauss(),gauss()]), r=Math.cbrt(rnd()); x=d[0]*r;y=d[1]*r;z=d[2]*r; }
+      this.g.push({id:i,x,y,z,pv:[(rnd()-.5)*.02,(rnd()-.5)*.02,(rnd()-.5)*.02],s:1+rnd()*2.4,col:[C.blue,C.white,C.uv,C.mag][i%4]}); }
+    this.obs=this.g[0]; this.start(); },
+  start(){ const Om=P("Om"), H=P("H"); this.a=0.3; this.t=0; this.adot=H*this.a*Math.sqrt(Math.max(0.001,Om/Math.pow(this.a,3)+(1-Om))); },
+  step(dt){ const H=P("H"), Om=P("Om"), a=this.a; const add=H*H*a*(-Om/(2*a*a*a)+(1-Om));
+    this.adot+=add*dt; this.a+=this.adot*dt; this.t+=dt;
+    this.g.forEach(g=>{g.x+=g.pv[0]*dt;g.y+=g.pv[1]*dt;g.z+=g.pv[2]*dt;});
+    if(this.a>1.85){ this.start(); showBanner("New universe"); }
+    else if(this.a<0.22&&this.adot<0){ flash=1; this.start(); showBanner("Big crunch, then a new universe"); } },
+  wpos(g){ const S=this.a*110; return [g.x*S,g.y*S,g.z*S]; },
+  draw(){
+    ctx.globalCompositeOperation="lighter"; const S=this.a*110, o=this.wpos(this.obs);
+    if(O("grid")){ const n=4; for(let i=0;i<=n;i++) for(let j=0;j<=n;j++){ const u=(-1+2*i/n)*S, v=(-1+2*j/n)*S;
+      line3([-S,u,v],[S,u,v],C.uv,.10,1); line3([u,-S,v],[u,S,v],C.uv,.10,1); line3([u,v,-S],[u,v,S],C.uv,.10,1); } }
+    const Hn=this.Hnow();
+    for(const g of this.g){ const w=this.wpos(g); proj(w[0],w[1],w[2],_p); g.sx=_p.x; g.sy=_p.y; g.sz=_p.z; g.sk=_p.k;
+      if(g===this.obs){ glow(_p.x,_p.y,28*_p.k,C.gold,1); glow(_p.x,_p.y,10*_p.k,C.white,1); }
+      else glow(_p.x,_p.y,g.s*4.2*_p.k,g.col,depthA(_p.z)*0.9); }
+    if(O("arrows")){ const scale=Math.min(1.6,0.9/Math.max(.05,Math.abs(Hn))); for(let i=0;i<this.g.length;i+=3){ const g=this.g[i]; if(g===this.obs) continue; const w=this.wpos(g), dx=w[0]-o[0],dy=w[1]-o[1],dz=w[2]-o[2];
+      const k=Hn*scale*0.55; proj(w[0],w[1],w[2],_p); const x0=_p.x,y0=_p.y; proj(w[0]+dx*k,w[1]+dy*k,w[2]+dz*k,_q);
+      arrow2(x0,y0,_q.x,_q.y,Hn>=0?C.mag:C.cyan,.45*depthA(_p.z),1); } }
+    if(sel && this.g.includes(sel) && sel!==this.obs){ ctx.strokeStyle=hexA(C.gold,.7); ctx.setLineDash([4,4]); ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(this.obs.sx,this.obs.sy); ctx.lineTo(sel.sx,sel.sy); ctx.stroke(); ctx.setLineDash([]); }
+    if(flash>0){ proj(...o,_p); glow(_p.x,_p.y,160*_p.k*flash,C.white,flash); }
+    ctx.globalCompositeOperation="source-over";
+    if(sel && this.g.includes(sel)) selRing(sel.sx,sel.sy,14);
+    if(hover && hover!==sel && this.g.includes(hover)) selRing(hover.sx,hover.sy,11);
+  },
+  setObserver(g){ this.obs=g; view.follow=g; showBanner(g.id===0?"Observing from the home galaxy":`Observing from galaxy #${g.id}`); updateFollowChip(); },
+  act:{ down(){return true;}, move(){}, up(x,y){ const g=cosmos.pick(x,y); if(g) cosmos.setObserver(g); } },
+  fire(){ this.setObserver(this.g[1+Math.floor(rnd()*(this.g.length-1))]); },
+  pick(x,y){ let best=null,bd=18; for(const g of this.g){ if(g.sx==null) continue; const d=Math.hypot(g.sx-x,g.sy-y); if(d<bd){bd=d;best=g;} } return best; },
+  dist(g){ const a=this.wpos(g), b=this.wpos(this.obs); return Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]); },
+  label(g){ return g===this.obs?"<b>Your galaxy</b> · observer":`<b>Galaxy #${g.id}</b> · ${this.dist(g).toFixed(0)} u away`; },
+  pos(g){ return this.wpos(g); },
+  Hnow(){return this.adot/this.a;},
+  metrics(){ const Om=P("Om"), a=this.a, addot=P("H")**2*a*(-Om/(2*a*a*a)+(1-Om));
+    return [{n:"Scale factor a",v:this.a.toFixed(2),s:`universe age ${this.t.toFixed(1)} s`},
+      {n:"Hubble rate H(a)",v:this.Hnow().toFixed(2),s:this.adot<0?"universe contracting":(addot>0?"expansion accelerating":"expansion slowing")},
+      {n:"Hubble rate over time",v:"",spark:this.Hnow()}]; },
+  count(){return `${this.g.length} galaxies`;},
+  inspectTitle:"Galaxy inspector", emptyHint:"Click a galaxy to inspect it, double-click to follow it",
+  inspect(g){ if(!g) return null; if(g===this.obs) return dl([["Galaxy",g.id===0?"Home":"#"+g.id],["Role","observer"],["Sees","every galaxy receding"]]);
+    const d=this.dist(g), v=this.Hnow()*d; return dl([["Galaxy","#"+String(g.id).padStart(3,"0")],["Distance",d.toFixed(0)+" u"],["Recession",v.toFixed(1)+" u/s"],["Direction",v>=0?"moving away":"approaching"]]); },
+  agent:{x:"Distance d",y:"Recession speed v",xs:[20,35,50,70,90,115,145,180],xf:v=>v.toFixed(0),yf:v=>v.toFixed(1),hyp:"v = k · dⁿ",
+    design:"Eight galaxies at distances 20 to 180 from your galaxy, speeds measured from their change in distance over a short interval.",
+    begin(){ cosmos.aFix=cosmos.a; cosmos.adFix=cosmos.adot; },
+    measure(d){ const a=cosmos.aFix, ad=cosmos.adFix; if(ad<=0) return NaN; const dt=0.002, x=d/(a*110); return ((a+ad*dt)-a)*x*110/dt*(1+(rnd()-.5)*0.04); },
+    fail:"The universe is contracting right now, so galaxies approach instead of receding and a power law in speed can’t be fitted. Run again while it expands.",
+    expect(){ return {n:1,text:`Matches <b>Hubble’s law</b>: speed is proportional to distance, with slope ≈ H(a) = ${(cosmos.adFix/cosmos.aFix).toFixed(2)} at a = ${cosmos.aFix.toFixed(2)}. Any galaxy you observe from sees the same law.`}; } }
+};
+
+/* ================= 0. Black hole ================= */
+const MW=8, RS=2*MW, GMW=960000;           // world units: GM/c² = 8, r_s = 16
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+const sup=n=>String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(v,d=2){ if(v===0) return "0"; const e=Math.floor(Math.log10(Math.abs(v))); if(e>=-2&&e<5) return v.toLocaleString("en-US",{maximumFractionDigits:e<1?d:Math.max(0,d-e)}); const m=v/Math.pow(10,e); return m.toFixed(d>1?1:0)+"×10"+sup(e); }
+function len(km){ const AU=1.496e8; if(km<1) return (km*1000).toFixed(0)+" m"; if(km<1e5) return sci(km,3)+" km"; if(km<0.2*AU) return (km/1e6).toFixed(km<1e7?2:1)+" million km"; return (km/AU).toFixed(km<10*AU?2:1)+" AU"; }
+function dur(s){ if(s<1e-3) return (s*1e6).toFixed(1)+" µs"; if(s<1) return (s*1e3).toFixed(1)+" ms"; if(s<120) return s.toFixed(1)+" s"; if(s<7200) return (s/60).toFixed(1)+" min"; if(s<172800) return (s/3600).toFixed(1)+" h"; return (s/86400).toFixed(1)+" days"; }
+const kerr={
+  rp:a=>1+Math.sqrt(1-a*a),
+  isco:a=>{ const z1=1+Math.cbrt(1-a*a)*(Math.cbrt(1+a)+Math.cbrt(1-a)), z2=Math.sqrt(3*a*a+z1*z1); return 3+z2-Math.sqrt((3-z1)*(3+z1+2*z2)); },
+  phPro:a=>2*(1+Math.cos(2/3*Math.acos(-a))), phRet:a=>2*(1+Math.cos(2/3*Math.acos(a))),
+  ergo:(a,cth)=>1+Math.sqrt(1-a*a*cth*cth)
+};
+const blackhole={
+  id:"blackhole", name:"Black hole", icon:"hole", view0:{yaw:.35,pitch:.16,zoom:1.55},
+  setup:"A spinning black hole feeds on a glowing accretion disk. Every structure is labelled. Change its mass and spin, throw in matter, fire light past it, or drop a star to tear it apart.",
+  hyp:"The shadow’s size grows as a power of the black hole’s mass.",
+  desc:"A labelled, explorable black hole: event horizon, ergosphere, photon sphere, shadow, ISCO, accretion disk, jets and tidal disruption. Throw matter, bend light, and let the agent measure the shadow.",
+  lawShort:"Shadow size", law(){return "b = 3√3 GM/c²";},
+  note:"Mass changes physical sizes, not the drawing: one r_s is shown at the same size for every mass.",
+  params:[{k:"M",label:"Mass",min:1,max:10,step:.01,val:6.63,fmt:v=>{const m=Math.pow(10,v);return sci(m,2)+" M☉";}},
+          {k:"a",label:"Spin a*",min:0,max:.998,step:.002,val:.9,fmt:v=>v.toFixed(3)},
+          {k:"mdot",label:"Accretion rate",min:.1,max:1,step:.05,val:.6,fmt:v=>Math.round(v*100)+"% Eddington"}],
+  presets:[{label:"Stellar · 10 M☉",M:1,a:.7},{label:"Sgr A* · 4.3×10⁶",M:6.63,a:.9},{label:"M87* · 6.5×10⁹",M:9.81,a:.9}],
+  options:[{k:"labels",label:"Labels",help:"Name every structure",val:true},{k:"zones",label:"Orbit zones",help:"Photon sphere, ISCO, ergosphere",val:true},
+    {k:"lens",label:"Gravitational lensing",help:"Bend light from behind the hole",val:true},{k:"doppler",label:"Doppler beaming",help:"Approaching gas glows brighter",val:true},
+    {k:"jets",label:"Relativistic jets",val:true},{k:"stars",label:"Background stars",val:true},{k:"cut",label:"Cutaway view",help:"See through the horizon",val:false},
+    {k:"light",label:"Throw light, not matter",help:"Interact mode fires photons",val:false}],
+  actLabel:"Throw", actHint:"Drag to throw gas at the hole and watch the predicted path. Switch on “Throw light” to fire photons instead.", fireLabel:"Drop a star",
+  legend:[["Accretion disk",C.gold],["Photon ring",C.white],["Jets",C.cyan],["Zones",C.mag],["Your matter",C.rose]],
+  followable:true,
+  Msun(){return Math.pow(10,P("M"));}, rg(){return 1.4766*this.Msun();},
+  rtRs(){ return 6.96e5/(2.953*Math.pow(this.Msun(),2/3)); },
+  init(){
+    this.disk=[]; for(let i=0;i<1700;i++){ const u=rnd(); this.disk.push({u:Math.pow(u,1.25),th:rnd()*TAU,h:gauss(),s:.6+rnd()*1.2,ph:rnd()}); }
+    this.stars=[]; for(let i=0;i<520;i++){ const d=norm([gauss(),gauss(),gauss()]); this.stars.push({d,b:.25+Math.pow(rnd(),3)*.9,col:[C.white,C.blue,C.gold,C.white][i%4]}); }
+    this.jet=[]; for(let i=0;i<560;i++) this.jet.push({t:rnd(),ang:rnd()*TAU,side:i%2?1:-1,sp:.7+rnd()*.6});
+    this.objs=[]; this.nid=0; this.swallowed=0; this.drag=null; this.t=0; this.pills=[];
+  },
+  rin(){ return kerr.isco(P("a"))*MW; },
+  omega(r){ const v=Math.sqrt(GMW*r)/(r-RS); return v/r; },
+  step(dt){
+    this.t+=dt; const rin=this.rin(), rout=12*RS;
+    for(const p of this.disk){ const r=rin+(rout-rin)*p.u; p.th+=this.omega(r)*dt; }
+    for(const j of this.jet){ j.t+=dt*0.35*j.sp; if(j.t>1) j.t-=1; }
+    const rp=kerr.rp(P("a"))*MW;
+    for(const o of this.objs){ if(o.state!=="live") continue;
+      if(o.kind==="photon"){ o.head=Math.min(o.path.length-1,o.head+dt*260/2.2); if(o.head>=o.path.length-1){ o.state=o.captured?"swallowed":"gone"; if(o.captured){this.swallowed++; flash=.4;} } continue; }
+      const n=6, r0=Math.hypot(o.x,o.y,o.z), tf=Math.sqrt(Math.max(0.03,1-RS/r0)), h=dt*tf/n;
+      for(let s=0;s<n;s++){ const r=Math.hypot(o.x,o.y,o.z), a=-GMW/Math.pow(Math.max(r-RS,0.5),2)/r; o.vx+=a*o.x*h; o.vy+=a*o.y*h; o.vz+=a*o.z*h; o.x+=o.vx*h; o.y+=o.vy*h; o.z+=o.vz*h; }
+      const r=Math.hypot(o.x,o.y,o.z); o.trail.push([o.x,o.y,o.z]); if(o.trail.length>(o.kind==="debris"?24:70)) o.trail.shift();
+      if(o.kind==="star"){ const rt=this.rtRs()*RS; if(r<rt){ this.disrupt(o); continue; } }
+      if(r<rp*1.04){ o.state="swallowed"; this.swallowed++; if(sel===o) sel=null; if(o.kind!=="debris") flash=.35; }
+      else if(r>700){ o.state="gone"; if(sel===o) sel=null; }
+    }
+    this.objs=this.objs.filter(o=>o.state==="live"||o===sel);
+  },
+  disrupt(o){ o.state="gone"; if(sel===o) sel=null; showBanner("Tidal disruption: the star is torn into a stream");
+    const sp=Math.hypot(o.vx,o.vy,o.vz)||1, rhat=norm([o.x,o.y,o.z]);
+    for(let i=0;i<90;i++){ const k=(rnd()-.5); const f=1+k*.35;
+      this.addObj("debris",[o.x+rhat[0]*k*14,o.y+rhat[1]*k*14,o.z+rhat[2]*k*14],[o.vx*f+gauss()*sp*.03,o.vy*f+gauss()*sp*.03,o.vz*f+gauss()*sp*.03]); } },
+  addObj(kind,pos,vel){ const o={id:++this.nid,kind,x:pos[0],y:pos[1],z:pos[2],vx:vel[0],vy:vel[1],vz:vel[2],trail:[],state:"live",born:performance.now()}; this.objs.push(o);
+    const live=this.objs.filter(x=>x.state==="live"); if(live.length>400) live[0].state="gone"; return o; },
+  photonPath(P0,D){ // exact Schwarzschild null geodesic via Binet equation, in units of GM/c²
+    const r0=Math.hypot(...P0), e1=[P0[0]/r0,P0[1]/r0,P0[2]/r0]; let cr=cross(P0,D); const cl=Math.hypot(...cr);
+    if(cl<1e-6){ const pts=[]; const inward=D[0]*e1[0]+D[1]*e1[1]+D[2]*e1[2]<0; for(let r=r0;r>RS&&inward;r-=4) pts.push([e1[0]*r,e1[1]*r,e1[2]*r]); return {pts:pts.length?pts:[P0],cap:inward}; }
+    const n=[cr[0]/cl,cr[1]/cl,cr[2]/cl], e2=cross(n,e1), de1=D[0]*e1[0]+D[1]*e1[1]+D[2]*e1[2], de2=D[0]*e2[0]+D[1]*e2[1]+D[2]*e2[2];
+    let u=MW/r0, du=-(de1)/((r0/MW)*de2), phi=0; const pts=[P0.slice()], f=(u)=>-u+3*u*u, h=0.006; let cap=false, minU=u;
+    for(let i=0;i<9000;i++){
+      const k1u=du,k1v=f(u), k2u=du+h/2*k1v,k2v=f(u+h/2*k1u), k3u=du+h/2*k2v,k3v=f(u+h/2*k2u), k4u=du+h*k3v,k4v=f(u+h*k3u);
+      u+=h/6*(k1u+2*k2u+2*k3u+k4u); du+=h/6*(k1v+2*k2v+2*k3v+k4v); phi+=h;
+      if(u>=0.5){ cap=true; break; } if(u<=MW/720){ break; }
+      if(i%3===0){ const r=MW/u, c=Math.cos(phi), s=Math.sin(phi); pts.push([(c*e1[0]+s*e2[0])*r,(c*e1[1]+s*e2[1])*r,(c*e1[2]+s*e2[2])*r]); }
+    }
+    return {pts,cap};
+  },
+  firePhoton(P0,D){ const r=this.photonPath(P0,D); const o=this.addObj("photon",P0,[0,0,0]); o.path=r.pts; o.captured=r.cap; o.head=0; return o; },
+  matterVel(p0,cur,sd){ if(sd<8){ const r=Math.max(RS*2,Math.hypot(...p0)), dir=norm(cross(camDir(),p0)), v=Math.sqrt(GMW*r)/(r-RS); return [dir[0]*v,dir[1]*v,dir[2]*v]; }
+    return [(cur[0]-p0[0])*2.4,(cur[1]-p0[1])*2.4,(cur[2]-p0[2])*2.4]; },
+  aimDir(p0,cur,sd){ if(sd<8) return norm([-p0[0],-p0[1],-p0[2]]); return norm([cur[0]-p0[0],cur[1]-p0[1],cur[2]-p0[2]]); },
+  act:{
+    down(x,y){ const p0=unproj(x,y); if(Math.hypot(...p0)<kerr.rp(P("a"))*MW*1.2) return false; blackhole.drag={p0,cur:p0,sx:x,sy:y,sd:0}; return true; },
+    move(x,y){ const d=blackhole.drag; if(!d) return; d.cur=unproj(x,y); d.sd=Math.hypot(x-d.sx,y-d.sy); },
+    up(x,y){ const d=blackhole.drag; if(!d) return; d.cur=unproj(x,y); d.sd=Math.hypot(x-d.sx,y-d.sy); blackhole.drag=null;
+      if(O("light")){ const o=blackhole.firePhoton(d.p0,blackhole.aimDir(d.p0,d.cur,d.sd)); showBanner(o.captured?"Photon captured: it crossed the photon sphere":"Photon escaped, bent by gravity"); }
+      else { blackhole.addObj("gas",d.p0,blackhole.matterVel(d.p0,d.cur,d.sd)); } }
+  },
+  fire(){ const r0=200, d=norm([gauss(),gauss()*.35,gauss()]), P0=[d[0]*r0,d[1]*r0,d[2]*r0], t=norm(cross([0,1,0],d)), rp=RS*(2.2+rnd()*1.6), vt=Math.sqrt(2*GMW*rp)/r0;
+    const o=this.addObj("star",P0,[t[0]*vt-d[0]*20,t[1]*vt-d[1]*20,t[2]*vt-d[2]*20]);
+    const rt=this.rtRs()*RS, rpl=kerr.rp(P("a"))*MW;
+    if(rt>r0){ this.disrupt(o); }
+    else if(rt<rpl) showBanner("Tidal radius is inside the horizon: this star will be swallowed whole");
+    else showBanner("A star falls toward the hole"); },
+  lensImgs(sx,sy,z2,cx,cy,shR,inf){
+    if(!O("lens")||(!inf&&z2>=0)) return [[sx,sy,1]];
+    const dx=sx-cx, dy=sy-cy; let rho=Math.hypot(dx,dy); const ux=rho>1e-3?dx/rho:1, uy=rho>1e-3?dy/rho:0;
+    const rE=inf?shR*1.55:shR*1.28*Math.sqrt(Math.min(1,-z2/(6*RS)));
+    if(rE<1) return [[sx,sy,1]];
+    const q=Math.sqrt(rho*rho+4*rE*rE), r1=(rho+q)/2, r2=(rho-q)/2, u=rho/rE, mu=(u*u+2)/(2*u*Math.sqrt(u*u+4)+1e-6);
+    const out=[[cx+ux*r1,cy+uy*r1,Math.min(2.2,mu+.5)]]; if(Math.abs(r2)>shR*1.02&&mu-.5>0.02) out.push([cx+ux*r2,cy+uy*r2,Math.min(1.2,mu-.5)]);
+    return out; },
+  draw(now){
+    const a=P("a"), mdot=P("mdot"), rp=kerr.rp(a)*MW, rin=this.rin(), rout=12*RS;
+    proj(0,0,0,_p); const cx=_p.x, cy=_p.y, cz=_p.z, kc=_p.k; const shR=3*Math.sqrt(3)*MW*kc, cut=O("cut");
+    this.cx=cx; this.cy=cy; this.shR=shR;
+    ctx.globalCompositeOperation="lighter";
+    // stars at infinity
+    if(O("stars")) for(const s of this.stars){ const d=s.d; const x1=d[0]*rot.cy+d[2]*rot.sy, z1=-d[0]*rot.sy+d[2]*rot.cy, y2=d[1]*rot.cp-z1*rot.sp, z2=d[1]*rot.sp+z1*rot.cp;
+      if(z2>-0.15) continue; const F=CAM*vs*0.9; const sx=cx+x1/(-z2)*F*0.5, sy=cy-y2/(-z2)*F*0.5; if(sx<-50||sx>W+50||sy<-50||sy>H+50) continue;
+      for(const [x,y,m] of this.lensImgs(sx,sy,-1,cx,cy,shR,true)){ glow(x,y,2.4+1.6*s.b*Math.sqrt(m),s.col,Math.min(1,s.b*m)); } }
+    // split disk into back/front
+    const camD=camDir(), back=[], front=[];
+    const cols=["#FFE7B8",C.gold,C.gold,C.mag,C.uv];
+    for(const p of this.disk){ const r=rin+(rout-rin)*p.u, x=Math.cos(p.th)*r, z=Math.sin(p.th)*r, y=p.h*r*0.018;
+      proj(x,y,z,_q); const ci=Math.min(4,Math.floor(p.u*5)); let I=(1.15-p.u*.75)*(.45+mdot*.75);
+      if(O("doppler")){ const beta=Math.min(.62,Math.sqrt(MW/Math.max(r-2*MW,MW))), g=1/((1/Math.sqrt(1-beta*beta))*(1-beta*(-Math.sin(p.th)*camD[0]+Math.cos(p.th)*camD[2]))); I*=Math.max(.12,Math.min(3.2,g*g*g)); }
+      const item=[_q.x,_q.y,_q.z,_q.k,cols[ci],I,p.s]; (_q.z<cz?back:front).push(item); }
+    const drawDisk=(arr,lens)=>{ for(const [x,y,z,k,col,I0,s] of arr){ const I=lens?I0*1.5:I0; const imgs=lens?this.lensImgs(x,y,z-cz,cx,cy,shR,false):[[x,y,1]];
+      for(const [ix,iy,m] of imgs) glow(ix,iy,(1.5+s*1.7)*k*(m>1?Math.sqrt(m):Math.max(.6,m)),col,Math.min(1,I*.3*Math.min(1.6,m+.25))); } };
+    // jets (back half)
+    const jetOn=O("jets"), jp=(0.25+a*a)*(.4+mdot*.8);
+    const jetPt=j=>{ const L=j.t*340+rp, rr=1.5+L*0.045; const ang=j.ang+L*0.04; return [Math.cos(ang)*rr, j.side*L, Math.sin(ang)*rr]; };
+    if(jetOn) for(const j of this.jet){ const q=jetPt(j); proj(...q,_q); if(_q.z>=cz||Math.hypot(_q.x-cx,_q.y-cy)<shR*1.05) continue; for(const [x,y,m] of this.lensImgs(_q.x,_q.y,_q.z-cz,cx,cy,shR,false)) glow(x,y,3.6*_q.k,C.cyan,jp*(1-j.t)*.55*Math.min(1,m)); }
+    if(jetOn) for(const sgn of [1,-1]){ proj(0,sgn*340,0,_q); proj(0,0,0,_p); { const dx=_q.x-_p.x, dy=_q.y-_p.y, dd=Math.hypot(dx,dy)||1; _p.x+=dx/dd*shR*1.05; _p.y+=dy/dd*shR*1.05; } const g=ctx.createLinearGradient(_p.x,_p.y,_q.x,_q.y); g.addColorStop(0,hexA(C.white,.5*jp)); g.addColorStop(.3,hexA(C.cyan,.35*jp)); g.addColorStop(1,hexA(C.cyan,0));
+      ctx.strokeStyle=g; ctx.lineWidth=Math.max(1.5,3*_p.k); ctx.beginPath(); ctx.moveTo(_p.x,_p.y); ctx.lineTo(_q.x,_q.y); ctx.stroke(); }
+    const bandCols=["#FFE7B8","#FFD27A",C.gold,"#F09BE0",C.mag,C.uv];
+    const bands=(wantBack)=>{ const NR=36; for(let i=0;i<NR;i++){ const t=i/(NR-1), r=rin+(9.5*RS-rin)*Math.pow(t,1.3), col=bandCols[Math.min(5,Math.floor(t*6))];
+        const A=(0.3-0.22*t)*(.4+mdot*.8); const segs=[[],[]];
+        const fl=s=>{ if(segs[s].length>1){ ctx.strokeStyle=hexA(col,Math.min(1,A*(s?0.7:1))); ctx.lineWidth=Math.max(1,(s?1.4:2.2)*kc); ctx.beginPath(); segs[s].forEach((q,j)=>j?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1])); ctx.stroke(); } segs[s]=[]; };
+        for(let j=0;j<=120;j++){ const an=j/120*TAU; proj(Math.cos(an)*r,0,Math.sin(an)*r,_q); const behind=_q.z<cz;
+          if(behind!==wantBack){ fl(0); fl(1); continue; }
+          if(wantBack){ const im=this.lensImgs(_q.x,_q.y,_q.z-cz,cx,cy,shR,false); segs[0].push([im[0][0],im[0][1]]); if(im[1]) segs[1].push([im[1][0],im[1][1]]); else fl(1); }
+          else segs[0].push([_q.x,_q.y]); }
+        fl(0); fl(1); } };
+    ctx.lineCap="round"; bands(true); ctx.lineCap="butt";
+    drawDisk(back,true);
+    // corona
+    for(let i=0;i<10;i++){ const an=i/10*TAU+now/4000, rr=rin*1.4; for(const sgn of [1,-1]){ proj(Math.cos(an)*rr,sgn*RS*0.9,Math.sin(an)*rr,_q); glow(_q.x,_q.y,22*_q.k,C.cyan,.06+.03*Math.sin(now/500+i)); } }
+    ctx.globalCompositeOperation="source-over";
+    // shadow + photon ring
+    const g1=ctx.createRadialGradient(cx,cy,shR*0.9,cx,cy,shR*1.08); g1.addColorStop(0,cut?"rgba(0,0,0,.55)":"rgba(0,0,0,1)"); g1.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle=g1; ctx.beginPath(); ctx.arc(cx,cy,shR*1.08,0,TAU); ctx.fill();
+    ctx.fillStyle=cut?"rgba(0,0,0,.55)":"#000"; ctx.beginPath(); ctx.arc(cx,cy,shR*0.92,0,TAU); ctx.fill();
+    ctx.globalCompositeOperation="lighter";
+    const ringBright=.35+mdot*.5; ctx.lineWidth=Math.max(1.2,shR*0.035);
+    for(let i=0;i<72;i++){ const a0=i/72*TAU, a1=(i+1)/72*TAU; let b=ringBright; if(O("doppler")){ const side=Math.cos(a0)*(rot.cy*0+1); b*=1+0.55*Math.cos(a0+Math.PI); }
+      ctx.strokeStyle=hexA(C.gold,Math.min(1,b)); ctx.beginPath(); ctx.arc(cx,cy,shR,a0,a1+.01); ctx.stroke(); }
+    ctx.strokeStyle=hexA(C.white,.55*ringBright); ctx.lineWidth=1; ctx.beginPath(); ctx.arc(cx,cy,shR*1.012,0,TAU); ctx.stroke();
+    // cutaway: horizon wireframe + singularity
+    if(cut){ for(let i=1;i<6;i++){ const th=i/6*Math.PI, y=Math.cos(th)*rp, rr=Math.sin(th)*rp; ring3(t=>[Math.cos(t*TAU)*rr,y,Math.sin(t*TAU)*rr],40,C.white,.35,1); }
+      for(let i=0;i<6;i++){ const ph=i/6*Math.PI; ring3(t=>[Math.cos(ph)*Math.sin(t*TAU)*rp,Math.cos(t*TAU)*rp,Math.sin(ph)*Math.sin(t*TAU)*rp],40,C.white,.25,1); }
+      if(a>0.02) ring3(t=>[Math.cos(t*TAU)*a*MW,0,Math.sin(t*TAU)*a*MW],32,C.rose,1,2); else { proj(0,0,0,_q); glow(_q.x,_q.y,8,C.rose,1); } }
+    // zones
+    if(O("zones")){
+      const eqRing=(r,col,al,dash)=>{ if(dash) ctx.setLineDash(dash); ring3(t=>[Math.cos(t*TAU)*r,0,Math.sin(t*TAU)*r],96,col,al,1.3); ctx.setLineDash([]); };
+      eqRing(rin,C.cyan,.75,[6,5]);
+      eqRing(kerr.phPro(a)*MW,C.white,.5,[2,4]); if(a>.02) eqRing(kerr.phRet(a)*MW,C.white,.35,[2,6]);
+      if(a>.02){ for(let i=1;i<8;i++){ const th=i/8*Math.PI, re=kerr.ergo(a,Math.cos(th))*MW, y=Math.cos(th)*re, rr=Math.sin(th)*re; ring3(t=>[Math.cos(t*TAU)*rr,y,Math.sin(t*TAU)*rr],48,C.mag,.32,1); } }
+      const rt=this.rtRs()*RS; if(rt>rp&&rt<14*RS) eqRing(rt,C.rose,.6,[10,6]);
+    }
+    ctx.lineCap="round"; bands(false); ctx.lineCap="butt";
+    drawDisk(front,false);
+    if(jetOn) for(const j of this.jet){ const q=jetPt(j); proj(...q,_q); if(_q.z<cz||Math.hypot(_q.x-cx,_q.y-cy)<shR*1.05) continue; glow(_q.x,_q.y,3.6*_q.k,C.cyan,jp*(1-j.t)*.55); }
+    // objects
+    const rplus=rp;
+    for(const o of this.objs){ if(o.state!=="live"&&o!==sel) continue;
+      if(o.kind==="photon"){ const n=Math.floor(o.head); const pts=o.path.slice(Math.max(0,n-140),n+1); poly3(pts,C.cyan,.85,1.6); if(pts.length){ proj(...pts[pts.length-1],_q); glow(_q.x,_q.y,9*_q.k,C.white,1); o.sx=_q.x; o.sy=_q.y; } continue; }
+      const r=Math.hypot(o.x,o.y,o.z), red=Math.max(0,Math.min(1,(RS*3-r)/(RS*3-rplus))), col=o.kind==="star"?C.gold:(o.kind==="debris"?(red>.5?C.rose:C.gold):C.rose);
+      if(o.trail.length>1) poly3(o.trail,col,o.kind==="debris"?.35:.55,o.kind==="debris"?1:1.4);
+      proj(o.x,o.y,o.z,_q); o.sx=_q.x; o.sy=_q.y; o.sz=_q.z;
+      const stretch=Math.min(10,1+500*Math.pow(RS/r,3)); const base=(o.kind==="star"?9:o.kind==="debris"?2.6:5)*_q.k, fade=1-red*.8;
+      if(stretch>1.3){ const rh=[o.x/r,o.y/r,o.z/r], L=base/_q.k*stretch*1.4; proj(o.x-rh[0]*L,o.y-rh[1]*L,o.z-rh[2]*L,_p); const ax=_p.x,ay=_p.y; proj(o.x+rh[0]*L,o.y+rh[1]*L,o.z+rh[2]*L,_p);
+        ctx.strokeStyle=hexA(col,.8*fade); ctx.lineWidth=Math.max(1,base/stretch*1.4); ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(_p.x,_p.y); ctx.stroke(); ctx.lineCap="butt"; }
+      glow(_q.x,_q.y,base*2/Math.sqrt(stretch),col,fade); }
+    if(flash>0){ glow(cx,cy,shR*2.2*flash,C.white,flash*.7); }
+    ctx.globalCompositeOperation="source-over";
+    for(const o of this.objs){ if(o===sel&&o.sx!=null) selRing(o.sx,o.sy,14); else if(o===hover&&o.sx!=null) selRing(o.sx,o.sy,11); }
+    // drag preview
+    if(this.drag&&this.drag.cur){ const d=this.drag; proj(...d.p0,_p); const x0=_p.x,y0=_p.y; glow(x0,y0,12,O("light")?C.cyan:C.rose,.9);
+      if(O("light")){ const r=this.photonPath(d.p0,this.aimDir(d.p0,d.cur,d.sd)); ctx.setLineDash([3,5]); poly3(r.pts,C.cyan,.7,1.3); ctx.setLineDash([]); }
+      else { if(d.sd>=8){ proj(...d.cur,_q); ctx.setLineDash([4,4]); arrow2(x0,y0,_q.x,_q.y,C.rose,.9,1.6); ctx.setLineDash([]); }
+        let [x,y,z]=d.p0, [vx,vy,vz]=this.matterVel(d.p0,d.cur,d.sd); const pts=[[x,y,z]], h=.012;
+        for(let i=0;i<260;i++){ for(let s=0;s<3;s++){ const r=Math.hypot(x,y,z), aa=-GMW/Math.pow(Math.max(r-RS,.5),2)/r; vx+=aa*x*h;vy+=aa*y*h;vz+=aa*z*h;x+=vx*h;y+=vy*h;z+=vz*h; } pts.push([x,y,z]); const r=Math.hypot(x,y,z); if(r<rp||r>650) break; }
+        ctx.setLineDash([2,5]); poly3(pts,C.rose,.7,1.2); ctx.setLineDash([]); } }
+    if(O("labels")) this.drawLabels(cx,cy,shR);
+  },
+  partList(){ const a=P("a"), rp=kerr.rp(a)*MW, rin=this.rin(), rt=this.rtRs()*RS, cut=O("cut"), zones=O("zones");
+    const L=[{id:"singularity",name:"Singularity",w:[0,0,0],off:[-150,120],show:true},
+      {id:"horizon",name:"Event horizon",w:[0,rp*.7,0],off:[-170,-40],show:true},
+      {id:"shadow",name:"Shadow and photon ring",scr:[Math.cos(-.75),Math.sin(-.75)],off:[120,-80],show:true},
+      {id:"photon",name:"Photon sphere",w:[kerr.phPro(a)*MW*Math.cos(2.4),0,kerr.phPro(a)*MW*Math.sin(2.4)],off:[0,0],show:zones},
+      {id:"ergo",name:"Ergosphere",w:[0,0,0],ergo:true,off:[0,0],show:zones&&a>.02},
+      {id:"isco",name:"Innermost stable orbit",ring:rin,off:[0,0],show:zones},
+      {id:"disk",name:"Accretion disk",ring:9*RS,side:-1,off:[0,0],show:true},
+      {id:"beam",name:"Doppler-beamed side",ring:5*RS,beam:true,off:[0,0],show:O("doppler")},
+      {id:"lensed",name:"Lensed far side of disk",scr:[0,-1.45],off:[90,-46],show:O("lens")},
+      {id:"jet",name:"Relativistic jet",w:[0,180,0],off:[60,-10],show:O("jets")},
+      {id:"corona",name:"Corona",w:[rin*1.4,RS*.9,0],off:[0,0],show:true},
+      {id:"tidal",name:"Tidal disruption radius",ring:rt,off:[0,0],show:zones&&rt>rp&&rt<14*RS}];
+    return L.filter(l=>l.show); },
+  drawLabels(cx,cy,shR){
+    const cam=camDir(), pills=[]; ctx.font="500 12px "+getComputedStyle(document.body).fontFamily;
+    for(const l of this.partList()){ let ax,ay;
+      if(l.scr){ ax=cx+l.scr[0]*shR; ay=cy+l.scr[1]*shR; }
+      else if(l.ring){ let best=null; for(let i=0;i<24;i++){ const an=i/24*TAU, p=[Math.cos(an)*l.ring,0,Math.sin(an)*l.ring]; proj(...p,_q);
+          let score; if(l.beam){ score=-Math.sin(an)*cam[0]+Math.cos(an)*cam[2]; } else score=_q.z*0.004+(l.side?-(_q.x-cx)/W*l.side:((_q.x-cx)/W))+(_q.y>cy?0.3:0);
+          if(!best||score>best.s) best={s:score,x:_q.x,y:_q.y}; } ax=best.x; ay=best.y; }
+      else if(l.ergo){ const re=kerr.ergo(P("a"),0)*MW; const d=norm(cross(cam,[0,1,0])); proj(d[0]*re,0,d[2]*re,_q); ax=_q.x; ay=_q.y; }
+      else { proj(...l.w,_q); ax=_q.x; ay=_q.y; }
+      let ox=l.off[0], oy=l.off[1]; if(!ox&&!oy){ const dx=ax-cx, dy=ay-cy, dd=Math.hypot(dx,dy)||1; ox=dx/dd*90; oy=dy/dd*60-10; }
+      const tw=ctx.measureText(l.name).width+20; pills.push({l,ax,ay,x:ax+ox-(ox<0?tw:0),y:ay+oy-11,w:tw,h:22}); }
+    for(let it=0;it<30;it++) for(let i=0;i<pills.length;i++) for(let j=i+1;j<pills.length;j++){ const A=pills[i],B=pills[j];
+      if(A.x<B.x+B.w+4&&B.x<A.x+A.w+4&&A.y<B.y+B.h+4&&B.y<A.y+A.h+4){ const push=(Math.min(A.y+A.h,B.y+B.h)-Math.max(A.y,B.y)+4)/2+1; if(A.y<B.y){A.y-=push;B.y+=push;}else{A.y+=push;B.y-=push;} } }
+    for(const p of pills){ p.x=Math.max(6,Math.min(W-p.w-6,p.x)); p.y=Math.max(6,Math.min(H-p.h-50,p.y));
+      const on=sel&&sel.part===p.l.id, hv=hover&&hover.part===p.l.id, ex=p.x+(p.ax<p.x?0:p.ax>p.x+p.w?p.w:p.w/2), ey=p.y+p.h/2;
+      ctx.strokeStyle=on?"rgba(255,217,154,.9)":"rgba(200,180,255,.55)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(p.ax,p.ay); ctx.lineTo(ex,ey); ctx.stroke();
+      ctx.fillStyle=on?"#FFD99A":"#E3D6FF"; ctx.beginPath(); ctx.arc(p.ax,p.ay,2.6,0,TAU); ctx.fill();
+      ctx.fillStyle=on?"rgba(70,30,150,.95)":hv?"rgba(44,18,104,.95)":"rgba(16,4,50,.85)"; ctx.strokeStyle=on?"#FFD99A":"rgba(130,100,230,.7)";
+      ctx.beginPath(); ctx.roundRect?ctx.roundRect(p.x,p.y,p.w,p.h,11):ctx.rect(p.x,p.y,p.w,p.h); ctx.fill(); ctx.stroke();
+      ctx.fillStyle="#F3EEFF"; ctx.textBaseline="middle"; ctx.fillText(p.l.name,p.x+10,p.y+p.h/2+.5); }
+    this.pills=pills; },
+  pick(x,y){ if(O("labels")) for(const p of this.pills||[]) if(x>=p.x&&x<=p.x+p.w&&y>=p.y&&y<=p.y+p.h) return {part:p.l.id,name:p.l.name};
+    let best=null,bd=16; for(const o of this.objs){ if(o.sx==null||o.state!=="live") continue; const d=Math.hypot(o.sx-x,o.sy-y); if(d<bd){bd=d;best=o;} }
+    if(best) return best;
+    if(Math.hypot(x-(this.cx||0),y-(this.cy||0))<(this.shR||0)) return {part:"shadow",name:"Shadow and photon ring"};
+    return null; },
+  label(o){ if(o.part) return `<b>${esc(o.name)}</b> · click for details`; if(o.kind==="photon") return `<b>Photon #${o.id}</b> · ${o.captured?"captured":"escaping"}`;
+    const r=Math.hypot(o.x,o.y,o.z)/RS; return `<b>${o.kind==="star"?"Star":o.kind==="debris"?"Stellar debris":"Gas cloud"} #${o.id}</b> · ${r.toFixed(1)} r<sub>s</sub>`; },
+  pos(o){ return (o&&!o.part&&o.state==="live"&&o.kind!=="photon")?[o.x,o.y,o.z]:null; },
+  metrics(){ const M=this.Msun(), rg=this.rg(), a=P("a"), ri=kerr.isco(a), td=Math.sqrt(Math.max(0,1-2/ri));
+    return [{n:"Event horizon radius",v:len(kerr.rp(a)*rg),s:`r_s = ${len(2*rg)} · spin ${a.toFixed(2)}`},
+      {n:"Clock rate at the ISCO",v:(td*100).toFixed(0)+"%",s:`of a distant clock, at ${ri.toFixed(2)} GM/c²`},
+      {n:"Matter swallowed",v:String(this.swallowed),spark:this.swallowed}]; },
+  count(){ return `1 r_s = ${len(2*this.rg())} · ${this.objs.filter(o=>o.state==="live").length} objects`; },
+  inspectTitle:"Anatomy", emptyHint:"Click a label or an object to learn about it",
+  info(id){ const M=this.Msun(), rg=this.rg(), a=P("a"), mdot=P("mdot"), rp=kerr.rp(a), ri=kerr.isco(a), tg=4.925e-6*M;
+    const rho=M*1.989e30/(4/3*Math.PI*Math.pow(2*rg*1000,3)), eff=1-Math.sqrt(1-2/(3*ri)), rt=this.rtRs();
+    const I={
+      singularity:["Where general relativity breaks down and density becomes infinite. For a spinning hole it is a ring, not a point. Nothing inside the horizon can avoid reaching it.",
+        [["Shape",a>.02?"ring":"point"],["Ring radius",a>.02?len(a*rg):"0"],["Visible","never, hidden by the horizon"]],"Turn on Cutaway view to see it drawn."],
+      horizon:["The surface of no return. Inside it every path, even for light, leads inward. Spin shrinks it from 2 to as little as 1 GM/c².",
+        [["Radius r₊",len(rp*rg)],["Formula","r₊ = GM/c² (1 + √(1 − a²))"],["Mean density",sci(rho,2)+" kg/m³"],["Hawking temp.",sci(6.17e-8/M,2)+" K"],["Evaporation",sci(2.1e67*Math.pow(M,3),1)+" yr"]],
+        rho<1.3?"Less dense than air: big black holes are not dense on average.":"Hawking radiation is real in theory but far too faint to detect."],
+      shadow:["The dark silhouette seen from outside. It is about 2.6 times the horizon radius because light that comes too close is captured. The bright ring is light that skimmed the photon sphere.",
+        [["Shadow diameter",len(2*3*Math.sqrt(3)*rg)],["Critical impact b",len(3*Math.sqrt(3)*rg)],["Formula","b = 3√3 GM/c²"]],"The Event Horizon Telescope imaged this for M87* (2019) and Sgr A* (2022)."],
+      photon:["Where gravity bends light into a circle. Photons can orbit here, but the orbit is unstable. Spin splits it into a closer prograde and a wider retrograde orbit.",
+        [["Prograde orbit",len(kerr.phPro(a)*rg)],["Retrograde orbit",len(kerr.phRet(a)*rg)],["Without spin","1.5 r_s"]],"Fire light in Interact mode to see photons bend, orbit or fall in."],
+      ergo:["A region outside the horizon where spacetime is dragged around so fast that nothing can stand still relative to distant stars. Energy can be extracted from it.",
+        [["Equator radius",len(2*rg)],["Pole radius",len(rp*rg)],["Spin a*",a.toFixed(3)]],"Penrose process and Blandford–Znajek jets tap this rotational energy."],
+      isco:["The innermost stable circular orbit. Inside it gas cannot orbit and plunges in. It marks the inner edge of the accretion disk.",
+        [["Radius",len(ri*rg)+` (${ri.toFixed(2)} GM/c²)`],["Orbital period",dur(TAU*Math.pow(ri,1.5)*tg)],["Efficiency η",(eff*100).toFixed(1)+"% of mc²"]],"Faster spin pulls it inward and makes the disk brighter."],
+      disk:["Gas spiralling inward, heated by friction to millions of degrees. The inner disk is hottest and outshines everything else.",
+        [["Inner edge",len(ri*rg)],["Peak temperature",sci(1e7*Math.pow(M/10,-.25)*Math.pow(mdot,.25),2)+" K"],["Glows in",M<1e3?"X-rays":"UV and optical"]],"Smaller black holes have hotter disks."],
+      beam:["Gas moving toward you looks brighter and bluer, the receding side dimmer and redder. Relativistic Doppler beaming makes one side of the disk blaze.",
+        [["Speed at ISCO",(Math.min(.62,Math.sqrt(1/Math.max(ri-2,1)))*100).toFixed(0)+"% of c"],["Brightness ∝","g³"]],"Switch Doppler beaming off to compare."],
+      lensed:["Light from the disk behind the hole bends over the top and under the bottom, so you see the far side of the disk wrapped around the shadow.",
+        [["Effect","gravitational lensing"],["Strongest","near the photon ring"]],"Turn lensing off to see the disk as it would look in flat space."],
+      jet:["Narrow beams of plasma launched along the spin axis at nearly light speed, powered by magnetic fields twisted by the spinning ergosphere.",
+        [["Power scales as","a² · accretion"],["Current spin",a.toFixed(2)],["Speed","≈ 0.99 c"]],"M87*’s jet stretches about 5,000 light-years."],
+      corona:["Thin, extremely hot plasma above the inner disk. It boosts disk light up to X-ray energies.",
+        [["Temperature","≈ 10⁹ K"],["Emits","hard X-rays"]],""],
+      tidal:["Where the hole’s tidal pull beats a Sun-like star’s own gravity and stretches it into a stream (spaghettification).",
+        [["Radius",len(rt*2*rg)],["In r_s",rt.toFixed(1)]],"Above about 10⁸ M☉ this lies inside the horizon and stars are swallowed whole. Try Drop a star."]
+    }; return I[id]; },
+  inspect(o){ if(!o) return null;
+    if(o.part){ const d=this.info(o.part); if(!d) return null; return `<div class="partinfo"><h5>${esc(o.name)}</h5><p>${esc(d[0])}</p>${dl(d[1])}${d[2]?`<p class="fact">${esc(d[2])}</p>`:""}</div>`; }
+    if(!this.objs.includes(o)) return null;
+    if(o.kind==="photon") return dl([["Object","Photon #"+o.id],["Fate",o.captured?"captured":"escaped"],["Path","exact Schwarzschild geodesic"]]);
+    const r=Math.hypot(o.x,o.y,o.z), sp=Math.hypot(o.vx,o.vy,o.vz), vesc=Math.sqrt(2*GMW*r)/(r-RS);
+    return dl([["Object",(o.kind==="star"?"Star":o.kind==="debris"?"Debris":"Gas cloud")+" #"+o.id],["Distance",(r/RS).toFixed(2)+" r_s"],["Clock rate",(Math.sqrt(Math.max(0,1-RS/r))*100).toFixed(1)+"%"],["Speed / escape",(sp/vesc*100).toFixed(0)+"%"],["Tidal stretch",(Math.min(10,1+500*Math.pow(RS/r,3))).toFixed(1)+"×"]]); },
+  agent:{x:"Mass M (M☉)",y:"Critical impact b",xs:[10,100,1e3,1e4,1e5,1e6,1e7,1e8],xf:v=>"10"+sup(Math.round(Math.log10(v))),yf:v=>sci(v,2)+" km",hyp:"b = k · Mⁿ",
+    design:"Eight black holes from 10 to 10⁸ M☉. For each, photons are fired on exact geodesics and the capture threshold is found by bisection.",
+    measure(M){ const m=1.4766*M; const cap=b=>{ const r0=1000*m; let u=1/r0, du=Math.sqrt(Math.max(0,1/(b*b)-u*u+2*m*u*u*u)); const h=.004, f=u=>-u+3*m*u*u;
+        for(let i=0;i<40000;i++){ const k1u=du,k1v=f(u),k2u=du+h/2*k1v,k2v=f(u+h/2*k1u),k3u=du+h/2*k2v,k3v=f(u+h/2*k2u),k4u=du+h*k3v,k4v=f(u+h*k3u);
+          u+=h/6*(k1u+2*k2u+2*k3u+k4u); du+=h/6*(k1v+2*k2v+2*k3v+k4v); if(u>1/(2*m)) return true; if(u<1/r0) return false; } return true; };
+      let lo=4*m, hi=7*m; for(let i=0;i<24;i++){ const mid=(lo+hi)/2; if(cap(mid)) lo=mid; else hi=mid; } return (lo+hi)/2; },
+    expect(){ return {n:1,text:"Matches <b>b = 3√3 GM/c²</b>, about 7.67 km per solar mass. The shadow grows in direct proportion to mass and is 2.6 times the Schwarzschild radius, as the Event Horizon Telescope found."}; } }
+};
+
+const SC=[blackhole,gravity,collider,quantum,cosmos];
+const ICONS={
+  hole:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="3.4"/><path d="M5.5 9.2C6.5 6.5 9 5 12 5s5.5 1.5 6.5 4.2"/></svg>',
+  orbit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-20 12 12)"/><circle cx="20.5" cy="9" r="1.2" fill="currentColor"/></svg>',
+  collide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 12h6M16 12h6"/><circle cx="12" cy="12" r="2"/><path d="M13.5 10.5c2-3 5-4 7-3.5M10.5 13.5c-2 3-5 4-7 3.5M13 13.8c1 2.5 3 4 5 4.2"/></svg>',
+  wave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 3v6M7 11v2M7 15v6"/><path d="M11 12c1.5-4 3-4 4.5 0s3 4 4.5 0"/><circle cx="3" cy="12" r="1.2" fill="currentColor"/></svg>',
+  cosmos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor"/><path d="M12 6V3M12 21v-3M6 12H3M21 12h-3M7.8 7.8 5.6 5.6M18.4 18.4l-2.2-2.2M7.8 16.2l-2.2 2.2M18.4 5.6l-2.2 2.2"/></svg>'
+};
+const ARROW='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+const CHECK='<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-10"/></svg>';
+const FIRE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg>';
+
+/* ---------- UI ---------- */
+let hist=new Array(60).fill(0);
+function renderList(){ $("#expList").innerHTML=SC.map((s,i)=>`<li><button aria-pressed="${s===scen}" data-i="${i}"><span class="n">0${i+1}</span>${esc(s.name)}${s===scen?CHECK:ARROW}</button></li>`).join(""); }
+function renderSliders(){ $("#sliders").innerHTML=scen.params.map(p=>`<div class="slider"><div class="row"><span>${esc(p.label)}</span><span id="pv_${p.k}">${esc(p.fmt(p.val))}</span></div><input type="range" data-k="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.val}" aria-label="${esc(p.label)}"></div>`).join(""); }
+function renderPresets(){ const c=$("#presets"); if(!scen.presets){ c.innerHTML=""; c.hidden=true; return; } c.hidden=false;
+  c.innerHTML=scen.presets.map((p,i)=>`<button class="chip" data-pre="${i}">${esc(p.label)}</button>`).join(""); }
+$("#presets").addEventListener("click",e=>{ const b=e.target.closest("[data-pre]"); if(!b) return; const pr=scen.presets[+b.dataset.pre];
+  scen.params.forEach(p=>{ if(pr[p.k]!=null) p.val=pr[p.k]; }); renderSliders(); $("#lawTxt").textContent=scen.law(); resetAgent(); showBanner(pr.label); });
+function renderOpts(){ $("#opts").innerHTML=scen.options.map(o=>`<button class="opt" role="switch" aria-checked="${o.val}" data-o="${o.k}"><span>${esc(o.label)}${o.help?`<small>${esc(o.help)}</small>`:""}</span><span class="sw"></span></button>`).join(""); }
+$("#sliders").addEventListener("input",e=>{ const k=e.target.dataset.k; if(!k) return; const p=scen.params.find(x=>x.k===k); p.val=+e.target.value;
+  $("#pv_"+k).textContent=p.fmt(p.val); $("#lawTxt").textContent=scen.law(); if(scen.resetOnChange) scen.init(); resetAgent(); });
+$("#opts").addEventListener("click",e=>{ const b=e.target.closest("[data-o]"); if(!b) return; const o=scen.options.find(x=>x.k===b.dataset.o); o.val=!o.val; b.setAttribute("aria-checked",o.val);
+  if(o.reset){ sel=null; view.follow=null; updateFollowChip(); scen.init(); } $("#lawTxt").textContent=scen.law(); resetAgent(); renderInspector(); });
+function setMode(m){ mode=m; $("#modeRotate").setAttribute("aria-pressed",m==="rotate"); $("#modeAct").setAttribute("aria-pressed",m==="act");
+  cv.style.cursor=m==="act"?"crosshair":""; $("#hint").textContent=m==="act"?scen.actHint:"Drag to rotate. Shift-drag or two fingers to pan. Scroll to zoom. Double-click to follow."; }
+$("#modeRotate").addEventListener("click",()=>setMode("rotate")); $("#modeAct").addEventListener("click",()=>setMode("act"));
+function updateFollowChip(){ const f=view.follow, c=$("#followChip"); if(f && scen.pos(f)){ c.hidden=false; $("#followTxt").textContent="Following "+(scen.label(f).replace(/<[^>]+>/g,"").split(" · ")[0]); } else c.hidden=true; }
+$("#followChip").addEventListener("click",()=>{ view.follow=null; updateFollowChip(); });
+function setScen(s){
+  scen=s; seed=(Math.random()*1e9)>>>0; sel=null; hover=null;
+  Object.assign(view,s.view0||VIEW0,{px:0,py:0,tx:0,ty:0,tz:0,follow:null}); updateFollowChip();
+  scen.init(); renderList(); renderSliders(); renderOpts(); renderPresets();
+  $("#setupTxt").textContent=s.setup; $("#hypTxt").textContent=s.hyp; $("#lawTxt").textContent=s.law(); $("#ctrlNote").textContent=s.note;
+  $("#stageLabel").textContent="Live universe / "+s.name.toLowerCase();
+  $("#legend").innerHTML=s.legend.map(([n,c])=>`<span><i style="background:${c};color:${c}"></i>${esc(n)}</span>`).join("");
+  $("#inspTitle").textContent=s.inspectTitle; $("#actLabel").textContent=s.actLabel; $("#fireBtn").innerHTML=FIRE+esc(s.fireLabel);
+  setMode(mode); renderInspector(); resetAgent(); const s0=updateMetrics(); hist=new Array(60).fill(s0||0); drawSpark();
+}
+$("#expList").addEventListener("click",e=>{const b=e.target.closest("button"); if(b) setScen(SC[+b.dataset.i]);});
+$("#fireBtn").addEventListener("click",()=>{ scen.fire(); cv.focus({preventScroll:true}); });
+scen=gravity;
+$("#cards").innerHTML=SC.map((s,i)=>`<article class="card"><div class="row"><span class="glyph">${ICONS[s.icon]}</span><span class="mono">0${i+1} / Experiment</span></div>
+  <h3>${esc(s.name)}</h3><p class="desc">${esc(s.desc)}</p><span class="mono">What the agent finds</span><p class="appr">${esc(s.lawShort)}: <span style="font-family:var(--serif);font-style:italic;font-size:19px">${esc(s.id==="gravity"?"T ∝ r^1.5":s.id==="quantum"?"Δy = λL / d":s.law())}</span></p>
+  <div class="foot"><span class="k">${s.options.length} options · ${s.params.length} constants</span><button class="btn line" data-open="${i}">Open in lab <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></button></div></article>`).join("");
+$("#cards").addEventListener("click",e=>{const b=e.target.closest("[data-open]"); if(!b) return; setScen(SC[+b.dataset.open]); location.hash="lab";});
+$$("#speedSeg button").forEach(b=>b.addEventListener("click",()=>{ speed=+b.dataset.sp; $$("#speedSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b)); }));
+
+function updateMetrics(){ const m=scen.metrics(); $("#m1v").style.fontSize=String(m[0].v).length>8?"34px":""; $("#m2v").style.fontSize=String(m[1].v).length>8?"34px":"";
+  $("#m1n").textContent=m[0].n; $("#m1v").textContent=m[0].v; $("#m1s").textContent=m[0].s;
+  $("#m2n").textContent=m[1].n; $("#m2v").textContent=m[1].v; $("#m2s").textContent=m[1].s;
+  $("#m3n").textContent=m[2].n; $("#m3v").textContent=m[2].v; $("#countTxt").textContent=scen.count(); return m[2].spark; }
+function drawSpark(){ const sp=$("#spark"), c=sp.getContext("2d"); if(!sp.width) return; const w=sp.width,h=sp.height; c.clearRect(0,0,w,h);
+  const mx=Math.max(...hist), mn=Math.min(...hist), rg=Math.max(mx-mn,Math.abs(mx)*0.2,1e-6);
+  const col=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()||"#6B1FE0";
+  c.strokeStyle=col; c.lineWidth=1.5*DPR; c.beginPath(); hist.forEach((v,i)=>{const x=i/(hist.length-1)*w, y=h-3*DPR-((v-mn)/rg)*(h-8*DPR); i?c.lineTo(x,y):c.moveTo(x,y);}); c.stroke();
+  c.lineTo(w,h);c.lineTo(0,h);c.closePath(); c.fillStyle=col.startsWith("#")?hexA(col,.12):"rgba(107,31,224,.12)"; c.fill(); }
+function renderInspector(){ const html=scen.inspect(sel); $("#inspector").innerHTML=html||`<p class="empty">${esc(scen.emptyHint||"Click an object to inspect it")}</p>`; }
+function resize(){ const r=$("#canvasBox").getBoundingClientRect(); if(!r.width) return;
+  DPR=Math.min(2,devicePixelRatio||1); W=r.width; H=r.height; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+  const sp=$("#spark"); sp.width=sp.clientWidth*DPR; sp.height=sp.clientHeight*DPR; drawSpark(); }
+new ResizeObserver(()=>resize()).observe($("#canvasBox"));
+
+/* ---------- pointer & keyboard ---------- */
+const ptrs=new Map(); let moved=0, pinch=null, actDrag=false, panDrag=false;
+const idle=()=>view.idleAt=performance.now();
+const cz=z=>Math.min(4,Math.max(.4,z));
+const local=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
+function redraw(){ if(paused) frameDraw(); }
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerdown",e=>{ cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY}); moved=0; idle(); $("#tip").hidden=true;
+  if(ptrs.size===2){ actDrag=false; if(scen.drag) scen.drag=null; const [a,b]=[...ptrs.values()]; pinch={d:Math.hypot(a.x-b.x,a.y-b.y),mx:(a.x+b.x)/2,my:(a.y+b.y)/2}; return; }
+  panDrag=e.shiftKey||e.button===2||e.button===1;
+  if(mode==="act"&&!panDrag&&e.button===0){ const [x,y]=local(e); const o=scen.pick(x,y); if(o&&o.part){ sel=o; renderInspector(); moved=99; } else actDrag=!!scen.act.down(x,y); }
+  cv.classList.toggle("dragging",!actDrag); });
+cv.addEventListener("pointermove",e=>{ const [lx,ly]=local(e);
+  const p=ptrs.get(e.pointerId);
+  if(!p){ if(e.pointerType==="mouse"){ const o=scen.pick(lx,ly); hover=o; const t=$("#tip"); if(o&&scen.label(o)){ t.innerHTML=scen.label(o); t.style.left=lx+"px"; t.style.top=ly+"px"; t.hidden=false; } else t.hidden=true; redraw(); } return; }
+  const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY; moved+=Math.abs(dx)+Math.abs(dy);
+  if(ptrs.size===2&&pinch){ const [a,b]=[...ptrs.values()], d=Math.hypot(a.x-b.x,a.y-b.y), mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    view.zoom=cz(view.zoom*d/pinch.d); view.px+=mx-pinch.mx; view.py+=my-pinch.my; pinch={d,mx,my}; }
+  else if(actDrag) scen.act.move(lx,ly);
+  else if(panDrag){ view.px+=dx; view.py+=dy; }
+  else { view.yaw+=dx*0.008; view.pitch=Math.max(-1.5,Math.min(1.5,view.pitch+dy*0.008)); }
+  idle(); redraw(); });
+function endP(e){ if(!ptrs.has(e.pointerId)) return; const single=ptrs.size===1; ptrs.delete(e.pointerId); if(ptrs.size<2) pinch=null; if(!ptrs.size) cv.classList.remove("dragging");
+  const [x,y]=local(e);
+  if(actDrag&&single){ actDrag=false; if(e.type==="pointerup") scen.act.up(x,y,moved); else scen.drag=null; return; }
+  if(single&&moved<6&&e.type==="pointerup"&&!panDrag){ sel=scen.pick(x,y); renderInspector(); redraw(); }
+  panDrag=false; }
+cv.addEventListener("pointerup",endP); cv.addEventListener("pointercancel",endP);
+cv.addEventListener("pointerleave",()=>{ $("#tip").hidden=true; hover=null; });
+cv.addEventListener("dblclick",e=>{ if(!scen.followable) return; const [x,y]=local(e); const o=scen.pick(x,y); view.follow=o||null; if(o){ sel=o; renderInspector(); } else { view.tx=view.ty=view.tz=0; } updateFollowChip(); });
+cv.addEventListener("wheel",e=>{ e.preventDefault(); view.zoom=cz(view.zoom*Math.exp(-e.deltaY*0.0015)); idle(); redraw(); },{passive:false});
+cv.addEventListener("keydown",e=>{ const k=e.key; let u=true;
+  if(k==="ArrowLeft")view.yaw-=.12; else if(k==="ArrowRight")view.yaw+=.12; else if(k==="ArrowUp")view.pitch=Math.max(-1.5,view.pitch-.12); else if(k==="ArrowDown")view.pitch=Math.min(1.5,view.pitch+.12);
+  else if(k==="+"||k==="=")view.zoom=cz(view.zoom*1.15); else if(k==="-")view.zoom=cz(view.zoom/1.15);
+  else if(k===" ")$("#pauseBtn").click(); else if(k==="f"||k==="F")scen.fire(); else if(k==="m"||k==="M")setMode(mode==="act"?"rotate":"act");
+  else if(k==="Escape"){ view.follow=null; updateFollowChip(); } else u=false;
+  if(u){e.preventDefault();idle();redraw();} });
+$("#zoomIn").addEventListener("click",()=>{view.zoom=cz(view.zoom*1.25);idle();redraw();});
+$("#zoomOut").addEventListener("click",()=>{view.zoom=cz(view.zoom/1.25);idle();redraw();});
+$("#viewReset").addEventListener("click",()=>{Object.assign(view,scen.view0||VIEW0,{px:0,py:0,tx:0,ty:0,tz:0,follow:null});updateFollowChip();redraw();});
+$("#spinBtn").addEventListener("click",()=>{view.auto=!view.auto;$("#spinBtn").setAttribute("aria-pressed",view.auto);});
+const PAUSE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="5" width="3" height="14" rx="1"/><rect x="14" y="5" width="3" height="14" rx="1"/></svg>';
+const PLAY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 5l11 7-11 7z"/></svg>';
+$("#pauseBtn").innerHTML=PAUSE;
+$("#pauseBtn").addEventListener("click",()=>{paused=!paused;$("#pauseBtn").innerHTML=paused?PLAY:PAUSE;$("#pauseBtn").setAttribute("aria-label",paused?"Play":"Pause");});
+$("#restartBtn").addEventListener("click",()=>{seed=(Math.random()*1e9)>>>0;sel=null;view.follow=null;view.tx=view.ty=view.tz=0;updateFollowChip();scen.init();renderInspector();resetAgent();const s0=updateMetrics();hist=new Array(60).fill(s0||0);});
+
+function frameDraw(){ ctx.clearRect(0,0,W,H); prepView(); scen.draw(performance.now()); }
+let last=performance.now(), mT=0;
+function loop(t){
+  const dt=Math.min(0.05,(t-last)/1000); last=t;
+  const on=$('[data-view="lab"]').classList.contains("show");
+  if(on){
+    if(view.auto&&!ptrs.size&&!view.follow&&t-view.idleAt>2500) view.yaw+=dt*0.15;
+    if(!paused){ const sdt=dt*speed*(reduced?.6:1), n=Math.ceil(speed); for(let i=0;i<n;i++) scen.step(sdt/n); if(flash>0) flash=Math.max(0,flash-dt*2.5); }
+    if(view.follow){ const p=scen.pos(view.follow); if(p){ view.tx+=(p[0]-view.tx)*0.12; view.ty+=(p[1]-view.ty)*0.12; view.tz+=(p[2]-view.tz)*0.12; } else { view.follow=null; updateFollowChip(); } }
+    else if(!view.follow && (view.tx||view.ty||view.tz)){ view.tx*=0.9; view.ty*=0.9; view.tz*=0.9; if(Math.abs(view.tx)+Math.abs(view.ty)+Math.abs(view.tz)<0.5) view.tx=view.ty=view.tz=0; }
+    frameDraw();
+    mT+=dt; if(mT>0.25){ mT=0; const s=updateMetrics(); hist.push(s); hist.shift(); drawSpark(); renderInspector(); }
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- law discovery agent ---------- */
+function setMethod(i){ $$("#method li").forEach(li=>{const s=+li.dataset.s; li.className=s<i?"done":s===i?"now":"";}); }
+function resetAgent(){ const a=scen.agent;
+  $("#runs").innerHTML=a.xs.map(x=>`<div class="rcol"><div class="t">${esc(a.xf(x))}</div><div class="box"><i></i></div><div class="s">—</div></div>`).join("");
+  $("#xLab").textContent="↑ "+a.x; $("#yLab").textContent="bars: "+a.y;
+  $("#agentStatus").textContent="Ready to run"; $("#result").hidden=true; setMethod(-1);
+  $("#agentLead").textContent="Eight simulated runs of this experiment, using your current constants. One fit: the power law that best explains them."; }
+function fit(xs,ys){ const lx=xs.map(Math.log), ly=ys.map(Math.log), n=xs.length; const mx=lx.reduce((a,b)=>a+b)/n, my=ly.reduce((a,b)=>a+b)/n;
+  let sxy=0,sxx=0; for(let i=0;i<n;i++){sxy+=(lx[i]-mx)*(ly[i]-my);sxx+=(lx[i]-mx)**2;} const b=sxy/sxx, a=my-b*mx;
+  let ssr=0,sst=0; for(let i=0;i<n;i++){ssr+=(ly[i]-(a+b*lx[i]))**2;sst+=(ly[i]-my)**2;} return {n:b,k:Math.exp(a),r2:1-ssr/sst}; }
+function plotSVG(xs,ys,f,a){
+  const w=420,h=250,L=46,R=14,T=14,B=38, lx=xs.map(Math.log), ly=ys.map(Math.log);
+  const x0=Math.min(...lx),x1=Math.max(...lx), y0=Math.min(...ly),y1=Math.max(...ly), px=(x1-x0)*.06||.1, py=(y1-y0)*.08||.1;
+  const sx=v=>L+(v-(x0-px))/((x1+px)-(x0-px))*(w-L-R), sy=v=>h-B-(v-(y0-py))/((y1+py)-(y0-py))*(h-T-B);
+  const fx0=x0-px, fx1=x1+px, ln=`<line x1="${sx(fx0)}" y1="${sy(Math.log(f.k)+f.n*fx0)}" x2="${sx(fx1)}" y2="${sy(Math.log(f.k)+f.n*fx1)}" stroke="var(--gold)" stroke-width="2" stroke-dasharray="5 4"/>`;
+  const pts=xs.map((x,i)=>`<circle cx="${sx(lx[i])}" cy="${sy(ly[i])}" r="5" fill="var(--accent)"/>`).join("");
+  const ticks=xs.filter((_,i)=>i%2===0).map(x=>`<text x="${sx(Math.log(x))}" y="${h-B+16}" text-anchor="middle" font-size="10" fill="var(--faint)" font-family="JetBrains Mono,monospace">${esc(a.xf(x))}</text>`).join("");
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Log-log plot of ${esc(a.y)} against ${esc(a.x)} with fitted line"><rect x="${L}" y="${T}" width="${w-L-R}" height="${h-T-B}" fill="none" stroke="var(--line)"/>${ln}${pts}${ticks}
+    <text x="${(L+w-R)/2}" y="${h-4}" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(a.x)} (log)</text>
+    <text x="12" y="${(T+h-B)/2}" text-anchor="middle" font-size="11" fill="var(--muted)" transform="rotate(-90 12 ${(T+h-B)/2})">${esc(a.y)} (log)</text></svg>`; }
+let running=false;
+const wait=ms=>new Promise(r=>setTimeout(r,reduced?ms/3:ms));
+$("#runBtn").addEventListener("click",async()=>{
+  if(running) return; running=true; $("#runBtn").disabled=true; resetAgent();
+  const s=scen, a=s.agent, st=$("#agentStatus"); const done=()=>{running=false;$("#runBtn").disabled=false;};
+  if(a.begin) a.begin();
+  setMethod(0); st.textContent=`Hypothesis: ${a.y.split(" ").slice(-1)[0]} follows ${a.hyp}`; await wait(800);
+  setMethod(1); st.textContent=a.design; await wait(1100);
+  setMethod(2); const ys=[]; const cols=$$("#runs .rcol");
+  for(let i=0;i<a.xs.length;i++){ if(scen!==s){done();return;}
+    st.textContent=`Running simulation ${i+1} of 8, ${a.x.toLowerCase()} = ${a.xf(a.xs[i])}`; await wait(320);
+    const y=a.measure(a.xs[i]); ys.push(y); cols[i].querySelector(".s").textContent=isFinite(y)?a.yf(y):"none"; }
+  if(ys.some(y=>!isFinite(y)||y<=0)){ setMethod(3); st.textContent="Analysis stopped: nothing to fit"; $("#result").hidden=false; $("#plot").innerHTML=`<p style="padding:24px;color:var(--muted);margin:0">No measurable signal in these runs.</p>`;
+    $("#lawOut").textContent="No law found"; $("#fitOut").textContent="0 of 8 runs measurable"; $("#verdict").innerHTML=esc(a.fail||"The runs produced nothing to fit."); setMethod(5); done(); return; }
+  const ymax=Math.max(...ys); cols.forEach((c,i)=>c.querySelector("i").style.height=(ys[i]/ymax*100)+"%");
+  setMethod(3); st.textContent="Fitting log y = log k + n · log x across all eight runs"; await wait(700);
+  const f=fit(a.xs,ys), ex=a.expect();
+  $("#plot").innerHTML=plotSVG(a.xs,ys,f,a);
+  const sym=a.hyp.split("=")[0].trim(), xv=a.hyp.split("·")[1].trim().replace("ⁿ","");
+  const kTxt=(f.k<0.01||f.k>999)?(()=>{const e=Math.floor(Math.log10(f.k)),m=f.k/Math.pow(10,e);return m.toFixed(2)+"×10<sup>"+String(e).replace("-","−")+"</sup>";})():f.k.toFixed(3);
+  $("#lawOut").innerHTML=`${esc(sym)} = ${kTxt} · ${esc(xv)}<sup>${f.n.toFixed(3)}</sup>`;
+  $("#fitOut").textContent=`R² = ${f.r2.toFixed(5)}  ·  8 runs`; $("#result").hidden=false;
+  setMethod(4); st.textContent="Re-running two points to check reproducibility"; await wait(700);
+  const chk=[0,7].map(i=>Math.abs(a.measure(a.xs[i])/ys[i]-1)*100), dev=Math.abs(f.n-ex.n);
+  $("#verdict").innerHTML=`${ex.text}<br><br>Exponent off theory by ${dev.toFixed(3)}. Repeat runs agree within ${Math.max(...chk).toFixed(2)}%. <span style="color:var(--faint)">Limitation: holds for this simulation and this parameter range only.</span>`;
+  setMethod(5); st.textContent="Discovery complete"; done();
+});
+
+/* ---------- theory notebook ---------- */
+const PRESETS=[
+  ["How would planetary orbits change if gravity fell off as 1/r³ instead of 1/r²?","Kepler’s third law says T² ∝ r³ for inverse-square gravity."],
+  ["What sets the spacing of the bright fringes in a double-slit experiment?","Single electrons still build an interference pattern over time."],
+  ["Why do faster charged particles curve less in a magnetic field?","The magnetic force is perpendicular to velocity."],
+  ["How does matter density change whether cosmic expansion speeds up or slows down?","Distant galaxies recede faster than nearby ones."]];
+$$("[data-preset]").forEach(b=>b.addEventListener("click",()=>{const p=PRESETS[+b.dataset.preset];$("#fQ").value=p[0];$("#fK").value=p[1];}));
+async function askLab(kind,payload){
+  const res=await fetch("/api/theory",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind,...payload})});
+  let data=null; try{data=await res.json();}catch(e){}
+  if(!res.ok||!data||data.error){const err=new Error((data&&data.error)||"failed");err.code=(data&&data.code)||res.status;throw err;}
+  return data.result; }
+function errCopy(e){ const c=e&&e.code;
+  if(c===429||c==="rate_limited") return "Too many requests at once. Wait a moment, then try again.";
+  if(c===400) return "Shorten your question and try again.";
+  if(c==="not_granted") return "Allow the theory notebook when prompted to generate a hypothesis.";
+  return "The notebook couldn’t reach the AI service. Check your connection and try again."; }
+$("#theoryBtn").addEventListener("click",async()=>{
+  const q=$("#fQ").value.trim(), k=$("#fK").value.trim(), out=$("#theoryOut");
+  if(!q){ toast("Write a physics question first"); return; }
+  $("#theoryBtn").disabled=true;
+  out.innerHTML='<span class="mono v">Theory note / drafting</span><div style="margin-top:16px" class="thinking"><i></i>Deriving…</div>';
+  try{
+    const r=await askLab("theory",{question:q,known:k});
+    const vars=(r.variables||[]).map(v=>`<dt>${esc(v.symbol)}</dt><dd>${esc(v.meaning)}</dd>`).join("");
+    const steps=(r.experiment||[]).map(s=>`<li>${esc(s)}</li>`).join("");
+    const labIdx=SC.findIndex(s=>s.id===r.lab);
+    out.innerHTML=`<span class="mono v">Theory note</span><h3>${esc(r.title||"Hypothesis")}</h3><p class="sum">${esc(r.hypothesis)}</p>
+      ${r.equation?`<div class="eq">${esc(r.equation)}</div>`:""}
+      <div class="split"><div><h5>Variables</h5><dl class="vars">${vars}</dl></div><div><h5>Experiment</h5><ol>${steps}</ol></div></div>
+      <div class="split" style="margin-top:20px"><div><h5>Prediction</h5><p>${esc(r.prediction)}</p></div><div><h5 class="g">What would prove it wrong</h5><p>${esc(r.falsify)}</p></div></div>
+      <div class="unc"><b>Limitations</b>${esc(r.limitations)}</div>
+      ${labIdx>=0?`<p style="margin:20px 0 0"><button class="btn line" id="toLab">Test it in the ${esc(SC[labIdx].name.toLowerCase())} lab <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></button></p>`:""}`;
+    if(labIdx>=0) $("#toLab").addEventListener("click",()=>{setScen(SC[labIdx]);location.hash="lab";});
+  }catch(e){ out.innerHTML=`<span class="mono v">Theory note</span><p class="err" style="margin-top:14px">${esc(errCopy(e))}</p>`; }
+  finally{ $("#theoryBtn").disabled=false; }
+});
+
+/* boot */
+route(); setScen(blackhole); resize(); $("#spinBtn").setAttribute("aria-pressed",view.auto);
+requestAnimationFrame(loop);
+})();
+
+</script>
+</body>
+</html>
